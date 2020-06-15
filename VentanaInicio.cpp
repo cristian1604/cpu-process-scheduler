@@ -6,6 +6,7 @@
 #define ROUND_ROBIN_MODE 1
 #define FCFS_MODE 2
 #define SRTF_MODE 3
+#define SJF_MODE 4
 
 using namespace std;
 
@@ -90,5 +91,7 @@ void VentanaInicio::process( wxCommandEvent& event )  {
 	res2->Show();
 	wxResults *res3 = new wxResults(this, SRTF_MODE);
 	res3->Show();
+	wxResults *res4 = new wxResults(this, SJF_MODE);
+	res4->Show();
 }
 

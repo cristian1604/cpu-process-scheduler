@@ -2,6 +2,7 @@
 #include "RoundRobin.h"
 #include "SRT.h"
 #include "FCFS.h"
+#include "SJF.h"
 
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
@@ -34,16 +35,25 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 		this->SetLabel("Round Robin");
 		m_staticText->SetLabel("Resultados para la planificacion Round Robin. Q = " + wxString::Format(wxT("%i"),quantum));
 		solveRoundRobin();
+		apropiative_mode = true;
 		break;
 	case FCFS_MODE:
 		this->SetLabel("FCFS / FIFO");
 		m_staticText->SetLabel("Resultados para la planificacion First Come First Served (FCFS / FIFO)");
 		solveFCFS();
+		apropiative_mode = false;
 		break;
 	case SRTF_MODE:
 		this->SetLabel("SRTF");
 		m_staticText->SetLabel("Resultados para la planificacion Shortest Remaining Time First (SRTF)");
 		solveSRTF();
+		apropiative_mode = true;
+		break;
+	case SJF_MODE:
+		this->SetLabel("SJF");
+		m_staticText->SetLabel("Resultados para la planificacion Shortest Job First (SJF)");
+		solveSJF();
+		apropiative_mode = false;
 		break;
 	}
 }
@@ -53,6 +63,14 @@ void wxResults::solveRoundRobin() {
 	float avg_st;
 	RoundRobin RR;
 	RR.SolveGantt(P, rr_quantum, avg_wt, avg_st);
+	displayResults(avg_wt, avg_st);
+}
+
+void wxResults::solveSJF() {
+	float avg_wt;
+	float avg_st;
+	SJF _SJF;
+	_SJF.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
 }
 
@@ -90,7 +108,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		m_table->SetCellValue((wxString::Format(wxT("%.2f"),is)), i, 3);
 		
 		// Diagrama de Gantt
-		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE) {
+		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE) {
 			for (int j = 0; j < cols; j++) {			// Recorro el vector de columnas de Gantt
 				m_gantt->SetColSize(j, 30);
 				if (P[i].Gantt[j] == WAITING) {

@@ -28,7 +28,6 @@ private:
 	// results from Process
 	int wait_time;
 	int service_time;	
-
 public:
 	vector <int> Gantt;
 	Process();

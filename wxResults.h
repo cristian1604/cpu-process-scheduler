@@ -9,6 +9,7 @@ using namespace std;
 #define ROUND_ROBIN_MODE 1
 #define FCFS_MODE 2
 #define SRTF_MODE 3
+#define SJF_MODE 4
 
 class wxResults : public wxResult {
 private:
@@ -16,6 +17,7 @@ private:
 	vector <Process> P;
 	int rr_quantum;
 	int mode;
+	bool apropiative_mode;
 private:
 	void highlightCell(bool side);
 protected:
@@ -28,6 +30,7 @@ public:
 	void solveRoundRobin();
 	void solveSRTF();
 	void solveFCFS();
+	void solveSJF();
 	void displayResults(float avg_wt, float avg_st);
 };
 

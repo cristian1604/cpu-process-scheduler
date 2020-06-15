@@ -1,17 +1,20 @@
 # cpu-process-scheduler
 CPU process scheduler with Gantt table and basic metrics
 
-Perform a quick analisys as execution order, average service time, waiting time, or service for several process. Written in ANSI C++ and GUI with wxWidgets.
+Perform a quick analisys as execution order, average service time, waiting time, and service time for several process.
+
+The GUI was developed using wxWidgets.
 
 ## Avaiable modes
 
 The modes avaiables on this program are:
 ### Preemptive (or appropiative)
  * **`Round Robin`** (with customizable quantum)
+ * **`SRTF`** (Shortest Remaining Time First)
 
 ### Not appropiative
  * **`FCFS`** (First Come First Served, or FIFO)
- * **`SRTF`** (Shortest Remaining Time First)
+ * **`SJF`** (Shortest Job First)
 
 
 ## Snapshots

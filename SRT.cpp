@@ -109,7 +109,7 @@ int SRT::findNextProcessToExecute(vector <Process> &P, vector <Process> &stack, 
 	return pos;
 }
 
-// Calcular tiempos de espera entre turnos de procesamiento en RoundRobin
+// Calcular tiempos de espera entre turnos de procesamiento
 // Calcula tanto los ServiceTime y los WaitTime, como también setea las esperas en el vector de Gantt
 float SRT::calculateWaitingTimes(vector <Process> &P) {
 	float res = 0;

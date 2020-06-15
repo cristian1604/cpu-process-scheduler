@@ -3,6 +3,8 @@
 #include "SRT.h"
 #include "FCFS.h"
 #include "SJF.h"
+#include "PriorityPreemptive.h"
+#include "PriorityNonPreemptive.h"
 
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
@@ -66,6 +68,18 @@ void wxResults::executeStrategy() {
 		solveSJF();
 		apropiative_mode = false;
 		break;
+	case PREEMPTIVE_PRIORITY_MODE:
+		this->SetLabel("Prioridad Apropiativa");
+		m_staticText->SetLabel("Resultados para la planificacion para prioridad apropiativa (preemptive priority)");
+		solvePreemptivePriority();
+		apropiative_mode = true;
+		break;
+	case NON_PREEMPTIVE_PRIORITY_MODE:
+		this->SetLabel("Prioridad No Apropiativa");
+		m_staticText->SetLabel("Resultados para la planificacion para prioridad no apropiativa (non preemptive priority)");
+		solveNonPreemptivePriority();
+		apropiative_mode = false;
+		break;
 	}
 }
 
@@ -101,6 +115,22 @@ void wxResults::solveFCFS() {
 	displayResults(avg_wt, avg_st);
 }
 
+void wxResults::solvePreemptivePriority() {
+	float avg_wt;
+	float avg_st;
+	PriorityPreemptive _PP;
+	_PP.SolveGantt(P, avg_wt, avg_st);
+	displayResults(avg_wt, avg_st);
+}
+
+void wxResults::solveNonPreemptivePriority() {
+	float avg_wt;
+	float avg_st;
+	PriorityNonPreemptive _PNP;
+	_PNP.SolveGantt(P, avg_wt, avg_st);
+	displayResults(avg_wt, avg_st);
+}
+
 #define NONE -1
 #define WAITING 0
 #define PROCESSING 1
@@ -119,7 +149,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		m_table->SetCellValue((wxString::Format(wxT("%.2f"),is)), i, 3);
 		
 		// Diagrama de Gantt
-		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE) {
+		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE || mode == PREEMPTIVE_PRIORITY_MODE || mode == NON_PREEMPTIVE_PRIORITY_MODE) {
 			for (int j = 0; j < cols; j++) {			// Recorro el vector de columnas de Gantt
 				m_gantt->SetColSize(j, 30);
 				if (P[i].Gantt[j] == WAITING) {
@@ -216,11 +246,27 @@ void wxResults::SJFStrategy( wxCommandEvent& event )  {
 	executeStrategy();
 }
 
+void wxResults::PreemptivePriorityStrategy( wxCommandEvent& event )  {
+	mode = PREEMPTIVE_PRIORITY_MODE;
+	ClearAll();
+	m_button_preemptivepriority->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
+void wxResults::NonPreemptivePriorityStrategy( wxCommandEvent& event )  {
+	mode = NON_PREEMPTIVE_PRIORITY_MODE;
+	ClearAll();
+	m_button_nonpreemptivepriority->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
 void wxResults::ClearAll() {
 	m_button_rr->SetBackgroundColour(unselected_color);
 	m_button_srtf->SetBackgroundColour(unselected_color);
 	m_button_sjf->SetBackgroundColour(unselected_color);
 	m_button_fcfs->SetBackgroundColour(unselected_color);
+	m_button_preemptivepriority->SetBackgroundColour(unselected_color);
+	m_button_nonpreemptivepriority->SetBackgroundColour(unselected_color);
 	m_gantt->ClearBackground();
 	m_gantt->DeleteRows(0, m_gantt->GetNumberRows());
 	m_gantt->DeleteCols(0, m_gantt->GetNumberCols(), true);

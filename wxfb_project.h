@@ -75,6 +75,8 @@ class wxResult : public wxFrame
 		wxButton* m_button_srtf;
 		wxButton* m_button_fcfs;
 		wxButton* m_button_sjf;
+		wxButton* m_button_preemptivepriority;
+		wxButton* m_button_nonpreemptivepriority;
 		wxStaticLine* m_staticline1;
 		wxStaticText* m_staticText;
 		wxGrid* m_tablaProcesos;
@@ -87,6 +89,8 @@ class wxResult : public wxFrame
 		virtual void SRTFStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void FCFSStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SJFStrategy( wxCommandEvent& event ) { event.Skip(); }
+		virtual void PreemptivePriorityStrategy( wxCommandEvent& event ) { event.Skip(); }
+		virtual void NonPreemptivePriorityStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void highlightDataCell( wxGridEvent& event ) { event.Skip(); }
 		virtual void highlightResultsCell( wxGridEvent& event ) { event.Skip(); }
 		

@@ -161,9 +161,9 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
 	wxGridSizer* gSizer4;
-	gSizer4 = new wxGridSizer( 1, 5, 0, 0 );
+	gSizer4 = new wxGridSizer( 1, 7, 0, 0 );
 	
-	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Usar estrategia"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Estrategia"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText8->Wrap( -1 );
 	gSizer4->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -180,6 +180,12 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	m_button_sjf = new wxButton( this, wxID_ANY, wxT("SJF"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer4->Add( m_button_sjf, 0, wxALL, 5 );
+	
+	m_button_preemptivepriority = new wxButton( this, wxID_ANY, wxT("Prioridad Aprop"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer4->Add( m_button_preemptivepriority, 0, wxALL, 5 );
+	
+	m_button_nonpreemptivepriority = new wxButton( this, wxID_ANY, wxT("Prioridad No Aprop"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer4->Add( m_button_nonpreemptivepriority, 0, wxALL, 5 );
 	
 	
 	bSizer2->Add( gSizer4, 0, 0, 5 );
@@ -312,6 +318,8 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_srtf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
 	m_button_sjf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SJFStrategy ), NULL, this );
+	m_button_preemptivepriority->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::PreemptivePriorityStrategy ), NULL, this );
+	m_button_nonpreemptivepriority->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::NonPreemptivePriorityStrategy ), NULL, this );
 	m_tablaProcesos->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
 }
@@ -323,6 +331,8 @@ wxResult::~wxResult()
 	m_button_srtf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
 	m_button_sjf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SJFStrategy ), NULL, this );
+	m_button_preemptivepriority->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::PreemptivePriorityStrategy ), NULL, this );
+	m_button_nonpreemptivepriority->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::NonPreemptivePriorityStrategy ), NULL, this );
 	m_tablaProcesos->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
 	

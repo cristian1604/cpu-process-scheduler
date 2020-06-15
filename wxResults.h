@@ -10,6 +10,8 @@ using namespace std;
 #define FCFS_MODE 2
 #define SRTF_MODE 3
 #define SJF_MODE 4
+#define PREEMPTIVE_PRIORITY_MODE 5
+#define NON_PREEMPTIVE_PRIORITY_MODE 6
 
 class wxResults : public wxResult {
 private:
@@ -23,6 +25,8 @@ private:
 private:
 	void highlightCell(bool side);
 protected:
+	void PreemptivePriorityStrategy( wxCommandEvent& event )  override;
+	void NonPreemptivePriorityStrategy( wxCommandEvent& event )  override;
 	void RoundRobinStrategy( wxCommandEvent& event )  override;
 	void SRTFStrategy( wxCommandEvent& event )  override;
 	void FCFSStrategy( wxCommandEvent& event )  override;
@@ -38,6 +42,8 @@ public:
 	void solveSRTF();
 	void solveFCFS();
 	void solveSJF();
+	void solvePreemptivePriority();
+	void solveNonPreemptivePriority();
 	void displayResults(float avg_wt, float avg_st);
 };
 

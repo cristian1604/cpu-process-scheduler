@@ -18,12 +18,19 @@ private:
 	int rr_quantum;
 	int mode;
 	bool apropiative_mode;
+	wxColour selection_color;
+	wxColour unselected_color;
 private:
 	void highlightCell(bool side);
 protected:
+	void RoundRobinStrategy( wxCommandEvent& event )  override;
+	void SRTFStrategy( wxCommandEvent& event )  override;
+	void FCFSStrategy( wxCommandEvent& event )  override;
+	void SJFStrategy( wxCommandEvent& event )  override;
 	void highlightResultsCell( wxGridEvent& event )  override;
 	void highlightDataCell( wxGridEvent& event )  override;
-	
+	void executeStrategy();
+	void ClearAll();
 public:
 	wxResults(wxWindow *parent=NULL, int modo = 0, int quantum = 0);
 	~wxResults();

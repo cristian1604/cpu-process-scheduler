@@ -14,6 +14,7 @@ private:
 	vector <Process> P;
 	FileManager DataProvider;
 protected:
+	void verifyQuantum( wxKeyEvent& event )  override;
 	void process( wxCommandEvent& event )  override;
 	void m_addRowOnKeyDown( wxKeyEvent& event )  override;
 	void addRow( wxCommandEvent& event )  override;

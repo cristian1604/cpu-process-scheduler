@@ -22,6 +22,7 @@
 #include <wx/valgen.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/statline.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +49,7 @@ class wxfbExample : public wxFrame
 		virtual void m_addRowOnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void addRow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void delRow( wxCommandEvent& event ) { event.Skip(); }
+		virtual void verifyQuantum( wxKeyEvent& event ) { event.Skip(); }
 		virtual void process( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnButtonClose( wxCommandEvent& event ) { event.Skip(); }
 		
@@ -68,6 +70,12 @@ class wxResult : public wxFrame
 	private:
 	
 	protected:
+		wxStaticText* m_staticText8;
+		wxButton* m_button_rr;
+		wxButton* m_button_srtf;
+		wxButton* m_button_fcfs;
+		wxButton* m_button_sjf;
+		wxStaticLine* m_staticline1;
 		wxStaticText* m_staticText;
 		wxGrid* m_tablaProcesos;
 		wxGrid* m_table;
@@ -75,13 +83,17 @@ class wxResult : public wxFrame
 		wxGrid* m_gantt;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void RoundRobinStrategy( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SRTFStrategy( wxCommandEvent& event ) { event.Skip(); }
+		virtual void FCFSStrategy( wxCommandEvent& event ) { event.Skip(); }
+		virtual void SJFStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void highlightDataCell( wxGridEvent& event ) { event.Skip(); }
 		virtual void highlightResultsCell( wxGridEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxVSCROLL );
 		
 		~wxResult();
 	

@@ -46,7 +46,7 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 	
 	while (bt < total_burst) {
 		for (int pos = 0; pos < P.size(); pos++) {
-			//if (bt < P[pos].getArrivalTime()) {continue;}
+			if (bt < P[pos].getArrivalTime()) {continue;}
 			remaining_bursts = queue[pos].getCpuTime();
 			if (remaining_bursts == 0) { continue; }
 			

@@ -77,6 +77,8 @@ void VentanaInicio::m_addRowOnKeyDown( wxKeyEvent& event )  {
 		addRow(x);
 	} else if (event.GetKeyCode() == 390 || event.GetKeyCode() == 45) {
 		delRow(x);
+	} else if (event.GetKeyCode() == 348) {
+		process(x);
 	} else {
 		event.Skip();
 	}
@@ -87,11 +89,25 @@ void VentanaInicio::process( wxCommandEvent& event )  {
 	//wxMessageBox("Guardado");
 	wxResults *res1 = new wxResults(this, ROUND_ROBIN_MODE, atoi(m_rr_quantum->GetValue()));
 	res1->Show();
-	wxResults *res2 = new wxResults(this, FCFS_MODE);
+	/*wxResults *res2 = new wxResults(this, FCFS_MODE);
 	res2->Show();
 	wxResults *res3 = new wxResults(this, SRTF_MODE);
 	res3->Show();
 	wxResults *res4 = new wxResults(this, SJF_MODE);
-	res4->Show();
+	res4->Show();*/
+}
+
+void VentanaInicio::verifyQuantum( wxKeyEvent& event )  {
+	wxString str = m_rr_quantum->GetValue();
+	if (!str.IsNumber()) {
+		wxMessageBox("Debe ingresar un valor numérico");
+		m_rr_quantum->SetValue("1");
+	}
+	if (event.GetKeyCode() == 330 || event.GetKeyCode() == 13 || event.GetKeyCode() == 348) {
+		wxCommandEvent x;
+		process(x);
+	} else {
+		event.Skip();
+	}
 }
 

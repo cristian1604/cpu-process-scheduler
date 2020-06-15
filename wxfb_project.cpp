@@ -115,7 +115,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	wxGridSizer* gSizer3;
 	gSizer3 = new wxGridSizer( 0, 2, 0, 0 );
 	
-	m_button6 = new wxButton( this, wxID_ANY, wxT("Procesar"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button6 = new wxButton( this, wxID_ANY, wxT("Simular  (F9)"), wxDefaultPosition, wxDefaultSize, 0 );
 	gSizer3->Add( m_button6, 0, wxALL, 5 );
 	
 	m_button7 = new wxButton( this, wxID_ANY, wxT("Cerrar"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -135,6 +135,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	m_addRow->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::addRow ), NULL, this );
 	m_addRow->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
 	m_delRow->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::delRow ), NULL, this );
+	m_rr_quantum->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::verifyQuantum ), NULL, this );
 	m_button6->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::process ), NULL, this );
 	m_button7->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::OnButtonClose ), NULL, this );
 }
@@ -146,6 +147,7 @@ wxfbExample::~wxfbExample()
 	m_addRow->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::addRow ), NULL, this );
 	m_addRow->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
 	m_delRow->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::delRow ), NULL, this );
+	m_rr_quantum->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::verifyQuantum ), NULL, this );
 	m_button6->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::process ), NULL, this );
 	m_button7->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::OnButtonClose ), NULL, this );
 	
@@ -157,6 +159,33 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	wxGridSizer* gSizer4;
+	gSizer4 = new wxGridSizer( 1, 5, 0, 0 );
+	
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Usar estrategia"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	gSizer4->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	
+	m_button_rr = new wxButton( this, wxID_ANY, wxT("Round Robin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_rr->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_ACTIVECAPTION ) );
+	
+	gSizer4->Add( m_button_rr, 0, wxALL, 5 );
+	
+	m_button_srtf = new wxButton( this, wxID_ANY, wxT("SRTF"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer4->Add( m_button_srtf, 0, wxALL, 5 );
+	
+	m_button_fcfs = new wxButton( this, wxID_ANY, wxT("FCFS"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer4->Add( m_button_fcfs, 0, wxALL, 5 );
+	
+	m_button_sjf = new wxButton( this, wxID_ANY, wxT("SJF"), wxDefaultPosition, wxDefaultSize, 0 );
+	gSizer4->Add( m_button_sjf, 0, wxALL, 5 );
+	
+	
+	bSizer2->Add( gSizer4, 0, 0, 5 );
+	
+	m_staticline1 = new wxStaticLine( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
+	bSizer2->Add( m_staticline1, 0, wxEXPAND | wxALL, 5 );
 	
 	m_staticText = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText->Wrap( -1 );
@@ -279,6 +308,10 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	m_button_rr->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
+	m_button_srtf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
+	m_button_fcfs->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
+	m_button_sjf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SJFStrategy ), NULL, this );
 	m_tablaProcesos->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
 }
@@ -286,6 +319,10 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 wxResult::~wxResult()
 {
 	// Disconnect Events
+	m_button_rr->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
+	m_button_srtf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
+	m_button_fcfs->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
+	m_button_sjf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SJFStrategy ), NULL, this );
 	m_tablaProcesos->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
 	

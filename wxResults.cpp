@@ -6,6 +6,8 @@
 
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
+	mode = modo;
+	
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
 		m_table->SetColSize(i, 150);
 	}
@@ -13,6 +15,7 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
 		m_tablaProcesos->SetColSize(i, 150);
 	}
+	
 	m_tablaProcesos->SetColSize(m_tablaProcesos->GetNumberCols()-1, 0);
 	m_table->SetColSize(0, 0);
 	
@@ -29,11 +32,19 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_priority)), pos, 3);
 	}
 	
-	mode = modo;
+	selection_color = m_button_rr->GetBackgroundColour();
+	unselected_color = m_button_sjf->GetBackgroundColour();
+	executeStrategy();
+
+}
+
+void wxResults::executeStrategy() {
+	//DataProvider.quickLoad(P);
+	
 	switch(mode) {
 	case ROUND_ROBIN_MODE:
 		this->SetLabel("Round Robin");
-		m_staticText->SetLabel("Resultados para la planificacion Round Robin. Q = " + wxString::Format(wxT("%i"),quantum));
+		m_staticText->SetLabel("Resultados para la planificacion Round Robin. Q = " + wxString::Format(wxT("%i"),rr_quantum));
 		solveRoundRobin();
 		apropiative_mode = true;
 		break;
@@ -175,5 +186,43 @@ void wxResults::highlightCell(bool side) {
 		m_tablaProcesos->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
 		m_tablaProcesos->Refresh(false);
 	}
+}
+
+void wxResults::RoundRobinStrategy( wxCommandEvent& event )  {
+	mode = ROUND_ROBIN_MODE;
+	ClearAll();
+	m_button_rr->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
+void wxResults::SRTFStrategy( wxCommandEvent& event )  {
+	mode = SRTF_MODE;
+	ClearAll();
+	m_button_srtf->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
+void wxResults::FCFSStrategy( wxCommandEvent& event )  {
+	mode = FCFS_MODE;
+	ClearAll();
+	m_button_fcfs->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
+void wxResults::SJFStrategy( wxCommandEvent& event )  {
+	mode = SJF_MODE;
+	ClearAll();
+	m_button_sjf->SetBackgroundColour(selection_color);
+	executeStrategy();
+}
+
+void wxResults::ClearAll() {
+	m_button_rr->SetBackgroundColour(unselected_color);
+	m_button_srtf->SetBackgroundColour(unselected_color);
+	m_button_sjf->SetBackgroundColour(unselected_color);
+	m_button_fcfs->SetBackgroundColour(unselected_color);
+	m_gantt->ClearBackground();
+	m_gantt->DeleteRows(0, m_gantt->GetNumberRows());
+	m_gantt->DeleteCols(0, m_gantt->GetNumberCols(), true);
 }
 

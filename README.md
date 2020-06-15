@@ -30,3 +30,5 @@ The modes avaiables on this program are preemptive and non preemptive:
 Written by Cristian Bottazzi.
 
 *This project was created as final project of Sistemas Operativos (operating systems) assignment, Computer Engineering at Facultad de Ingeniería y Ciencias Hídricas.*
+
+Notes about efficency: This project was developed without optimization on iterative methods. The source code must be optimized for production purposes, but I've decided leave *as is* for clarity on the study of these algorithms on academic envirorments.

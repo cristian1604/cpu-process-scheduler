@@ -59,4 +59,8 @@ int Process::getId() {
 	return p_id;
 }
 
+int Process::getPriority() {
+	return p_priority;
+}
+
 

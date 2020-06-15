@@ -36,6 +36,7 @@ public:
 	void setServiceTime(int val);
 	void setWaitTime(int val);
 	int getArrivalTime();
+	int getPriority();
 	void setCpuTime(int bursts);
 	int getCpuTime();
 	char *getProcessName();

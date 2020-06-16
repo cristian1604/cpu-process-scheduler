@@ -5,16 +5,18 @@ Perform a quick analisys as execution order, average service time, waiting time,
 
 The GUI was developed using wxWidgets.
 
-## Avaiable modes
+## Avaiable strategies
 
-The modes avaiables on this program are preemptive and non preemptive:
+The avaiable modes on this program are classified by preemptive and non preemptive strategies:
 ### Preemptive strategies
  * **`Round Robin`** (with customizable quantum)
  * **`SRTF`** (Shortest Remaining Time First)
+ * **`Priority Preemptive`** (At lower value, has higher priority)
 
 ### Non preemptive strategies
  * **`FCFS`** (First Come First Served, based on FIFO)
  * **`SJF`** (Shortest Job First)
+ * **`Priority non preemptive`** (At lower value, has higher priority)
 
 
 ## Snapshots
@@ -31,4 +33,4 @@ Written by Cristian Bottazzi.
 
 *This project was created as final project of Sistemas Operativos (operating systems) assignment, Computer Engineering at Facultad de Ingeniería y Ciencias Hídricas.*
 
-Notes about efficency: This project was developed without optimization on iterative methods. The source code must be optimized for production purposes, but I've decided leave *as is* for clarity on the study of these algorithms on academic envirorments.
+Notes about efficency: This project was developed without any optimization on iterative methods. The source code must be optimized for production purposes, but I've decided leave *as is* for clarity on the study of these algorithms on academic envirorments.

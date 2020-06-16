@@ -5,6 +5,7 @@
 #include "SJF.h"
 #include "PriorityPreemptive.h"
 #include "PriorityNonPreemptive.h"
+#include "wxAbout.h"
 
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
@@ -42,44 +43,53 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 
 void wxResults::executeStrategy() {
 	//DataProvider.quickLoad(P);
-	
+	wxString title("Simulacion de planificacion de procesos - ");
 	switch(mode) {
 	case ROUND_ROBIN_MODE:
-		this->SetLabel("Round Robin");
+		this->SetLabel(title + "Round Robin");
 		m_staticText->SetLabel("Resultados para la planificacion Round Robin. Q = " + wxString::Format(wxT("%i"),rr_quantum));
 		solveRoundRobin();
 		apropiative_mode = true;
 		break;
 	case FCFS_MODE:
-		this->SetLabel("FCFS / FIFO");
+		this->SetLabel(title + "FCFS / FIFO");
 		m_staticText->SetLabel("Resultados para la planificacion First Come First Served (FCFS / FIFO)");
 		solveFCFS();
 		apropiative_mode = false;
 		break;
 	case SRTF_MODE:
-		this->SetLabel("SRTF");
+		this->SetLabel(title + "SRTF");
 		m_staticText->SetLabel("Resultados para la planificacion Shortest Remaining Time First (SRTF)");
 		solveSRTF();
 		apropiative_mode = true;
 		break;
 	case SJF_MODE:
-		this->SetLabel("SJF");
+		this->SetLabel(title + "SJF");
 		m_staticText->SetLabel("Resultados para la planificacion Shortest Job First (SJF)");
 		solveSJF();
-		apropiative_mode = false;
+		apropiative_mode = true;
 		break;
 	case PREEMPTIVE_PRIORITY_MODE:
-		this->SetLabel("Prioridad Apropiativa");
+		this->SetLabel(title + "Prioridad Apropiativa");
 		m_staticText->SetLabel("Resultados para la planificacion para prioridad apropiativa (preemptive priority)");
 		solvePreemptivePriority();
 		apropiative_mode = true;
 		break;
 	case NON_PREEMPTIVE_PRIORITY_MODE:
-		this->SetLabel("Prioridad No Apropiativa");
+		this->SetLabel(title + "Prioridad No Apropiativa");
 		m_staticText->SetLabel("Resultados para la planificacion para prioridad no apropiativa (non preemptive priority)");
 		solveNonPreemptivePriority();
 		apropiative_mode = false;
 		break;
+	}
+	
+	// Información adicional
+	if (apropiative_mode) {
+		m_strategy_type->SetLabel("Apropiativa");
+		m_strategy_type->SetForegroundColour(wxColour(0, 177, 25));
+	} else {
+		m_strategy_type->SetLabel("No apropiativa");
+		m_strategy_type->SetForegroundColour(wxColour(0,0,0));
 	}
 }
 
@@ -174,6 +184,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 	m_table->SetCellFont(P.size(), 1, f);
 	//m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_st)), P.size(), 2);
 	m_table->SetCellBackgroundColour(P.size(), 1, wxColour(117, 223, 230));
+	
 }
 
 wxResults::~wxResults() {
@@ -270,5 +281,15 @@ void wxResults::ClearAll() {
 	m_gantt->ClearBackground();
 	m_gantt->DeleteRows(0, m_gantt->GetNumberRows());
 	m_gantt->DeleteCols(0, m_gantt->GetNumberCols(), true);
+	m_table->DeleteRows(m_table->GetNumberRows()-1, 1);
+}
+
+void wxResults::about( wxKeyEvent& event )  {
+	if (event.GetKeyCode() == WXK_F1) {
+		wxAbout *w = new wxAbout;
+		w->Show();
+	} else {
+		event.Skip();
+	}
 }
 

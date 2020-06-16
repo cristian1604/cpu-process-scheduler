@@ -74,7 +74,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	
 	gSizer2->Add( m_delRow, 0, wxALL, 5 );
 	
-	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Presione la tecla + para agregar un nuevo proceso.\nPresione la tecla - para quitar un proceso de la tabla"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Presione la tecla + para agregar un nuevo proceso.\nPresione la tecla - para quitar un proceso de la tabla\nPresione F9 para realizar la simulación"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
 	m_staticText2->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
 	
@@ -96,7 +96,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	m_staticText21->Wrap( -1 );
 	m_staticText21->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
 	
-	gSizer2->Add( m_staticText21, 0, wxALL, 5 );
+	gSizer2->Add( m_staticText21, 0, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	m_rr_quantum = new wxTextCtrl( this, wxID_ANY, wxT("2"), wxDefaultPosition, wxDefaultSize, 0 );
 	#ifdef __WXGTK__
@@ -107,7 +107,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	#else
 	m_rr_quantum->SetMaxLength( 2 );
 	#endif
-	gSizer2->Add( m_rr_quantum, 0, wxALL, 5 );
+	gSizer2->Add( m_rr_quantum, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
 	
 	bSizer1->Add( gSizer2, 0, 0, 5 );
@@ -131,6 +131,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::about ) );
 	m_tablaProcesos->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
 	m_addRow->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::addRow ), NULL, this );
 	m_addRow->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
@@ -143,6 +144,7 @@ wxfbExample::wxfbExample( wxWindow* parent, wxWindowID id, const wxString& title
 wxfbExample::~wxfbExample()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::about ) );
 	m_tablaProcesos->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
 	m_addRow->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxfbExample::addRow ), NULL, this );
 	m_addRow->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxfbExample::m_addRowOnKeyDown ), NULL, this );
@@ -198,7 +200,7 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer2->Add( m_staticText, 0, wxALL|wxEXPAND, 5 );
 	
 	wxGridSizer* gSizer3;
-	gSizer3 = new wxGridSizer( 0, 2, 0, 0 );
+	gSizer3 = new wxGridSizer( 1, 2, 0, 0 );
 	
 	m_tablaProcesos = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	
@@ -272,13 +274,12 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	gSizer3->Add( m_table, 1, wxALL|wxALIGN_RIGHT, 5 );
 	
 	
-	bSizer2->Add( gSizer3, 0, wxEXPAND, 5 );
-	
-	
-	bSizer2->Add( 0, 0, 0, wxALL, 5 );
+	bSizer2->Add( gSizer3, 0, wxEXPAND|wxRIGHT|wxLEFT, 5 );
 	
 	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Diagrama de Gantt"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText5->Wrap( -1 );
+	m_staticText5->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_INFOBK ) );
+	
 	bSizer2->Add( m_staticText5, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
 	m_gantt = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
@@ -307,6 +308,60 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_gantt->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
 	bSizer2->Add( m_gantt, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
+	wxGridSizer* gSizer9;
+	gSizer9 = new wxGridSizer( 0, 2, 0, 0 );
+	
+	wxStaticBoxSizer* sbSizer1;
+	sbSizer1 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Datos") ), wxVERTICAL );
+	
+	sbSizer1->SetMinSize( wxSize( 300,70 ) ); 
+	wxGridSizer* gSizer5;
+	gSizer5 = new wxGridSizer( 0, 2, 0, 0 );
+	
+	m_staticText7 = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("Estrategia:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7->Wrap( -1 );
+	gSizer5->Add( m_staticText7, 0, wxALL, 5 );
+	
+	m_strategy_type = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("APROPIATIVA"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_strategy_type->Wrap( -1 );
+	m_strategy_type->SetBackgroundColour( wxColour( 0, 177, 65 ) );
+	
+	gSizer5->Add( m_strategy_type, 0, wxALL, 5 );
+	
+	
+	sbSizer1->Add( gSizer5, 1, wxEXPAND, 5 );
+	
+	
+	gSizer9->Add( sbSizer1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	wxStaticBoxSizer* sbSizer11;
+	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Referencias") ), wxVERTICAL );
+	
+	wxGridSizer* gSizer51;
+	gSizer51 = new wxGridSizer( 0, 2, 0, 0 );
+	
+	m_staticText71 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("EJECUTA"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText71->Wrap( -1 );
+	m_staticText71->SetForegroundColour( wxColour( 255, 0, 0 ) );
+	
+	gSizer51->Add( m_staticText71, 0, wxALL, 5 );
+	
+	m_strategy_type1 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("ESPERA"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_strategy_type1->Wrap( -1 );
+	m_strategy_type1->SetForegroundColour( wxColour( 138, 162, 171 ) );
+	m_strategy_type1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	
+	gSizer51->Add( m_strategy_type1, 0, wxALL, 5 );
+	
+	
+	sbSizer11->Add( gSizer51, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND, 5 );
+	
+	
+	gSizer9->Add( sbSizer11, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	
+	bSizer2->Add( gSizer9, 1, wxEXPAND, 5 );
+	
 	
 	this->SetSizer( bSizer2 );
 	this->Layout();
@@ -314,6 +369,7 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::about ) );
 	m_button_rr->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -327,6 +383,7 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 wxResult::~wxResult()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::about ) );
 	m_button_rr->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -336,4 +393,45 @@ wxResult::~wxResult()
 	m_tablaProcesos->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
 	
+}
+
+About::About( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText15 = new wxStaticText( this, wxID_ANY, wxT("Multiple strategies CPU process"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText15->Wrap( -1 );
+	m_staticText15->SetFont( wxFont( 15, 74, 90, 92, false, wxT("Sans") ) );
+	
+	bSizer3->Add( m_staticText15, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxTOP|wxRIGHT|wxLEFT, 5 );
+	
+	m_staticText151 = new wxStaticText( this, wxID_ANY, wxT("scheduler simulator"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText151->Wrap( -1 );
+	m_staticText151->SetFont( wxFont( 15, 74, 90, 92, false, wxT("Sans") ) );
+	
+	bSizer3->Add( m_staticText151, 0, wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxRIGHT|wxLEFT, 5 );
+	
+	m_staticText16 = new wxStaticText( this, wxID_ANY, wxT("Written by Cristian Bottazzi"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText16->Wrap( -1 );
+	bSizer3->Add( m_staticText16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_staticText161 = new wxStaticText( this, wxID_ANY, wxT("June 2020"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText161->Wrap( -1 );
+	bSizer3->Add( m_staticText161, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_hyperlink1 = new wxHyperlinkCtrl( this, wxID_ANY, wxT("Sourcecode on GitHub"), wxT("https://github.com/cristian1604/cpu-process-scheduler"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	
+	this->SetSizer( bSizer3 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+About::~About()
+{
 }

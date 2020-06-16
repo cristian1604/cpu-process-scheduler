@@ -7,6 +7,7 @@
 #define FCFS_MODE 2
 #define SRTF_MODE 3
 #define SJF_MODE 4
+#include "wxAbout.h"
 
 using namespace std;
 
@@ -106,6 +107,15 @@ void VentanaInicio::verifyQuantum( wxKeyEvent& event )  {
 	if (event.GetKeyCode() == 330 || event.GetKeyCode() == 13 || event.GetKeyCode() == 348) {
 		wxCommandEvent x;
 		process(x);
+	} else {
+		event.Skip();
+	}
+}
+
+void VentanaInicio::about( wxKeyEvent& event )  {
+	if (event.GetKeyCode() == WXK_F1) {
+		wxAbout *w = new wxAbout;
+		w->Show();
 	} else {
 		event.Skip();
 	}

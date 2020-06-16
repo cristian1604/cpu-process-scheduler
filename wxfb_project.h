@@ -23,6 +23,8 @@
 #include <wx/sizer.h>
 #include <wx/frame.h>
 #include <wx/statline.h>
+#include <wx/statbox.h>
+#include <wx/hyperlink.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +48,7 @@ class wxfbExample : public wxFrame
 		wxButton* m_button7;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void about( wxKeyEvent& event ) { event.Skip(); }
 		virtual void m_addRowOnKeyDown( wxKeyEvent& event ) { event.Skip(); }
 		virtual void addRow( wxCommandEvent& event ) { event.Skip(); }
 		virtual void delRow( wxCommandEvent& event ) { event.Skip(); }
@@ -83,8 +86,13 @@ class wxResult : public wxFrame
 		wxGrid* m_table;
 		wxStaticText* m_staticText5;
 		wxGrid* m_gantt;
+		wxStaticText* m_staticText7;
+		wxStaticText* m_strategy_type;
+		wxStaticText* m_staticText71;
+		wxStaticText* m_strategy_type1;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void about( wxKeyEvent& event ) { event.Skip(); }
 		virtual void RoundRobinStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SRTFStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void FCFSStrategy( wxCommandEvent& event ) { event.Skip(); }
@@ -97,9 +105,31 @@ class wxResult : public wxFrame
 	
 	public:
 		
-		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,500 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxVSCROLL );
+		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,559 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL|wxVSCROLL );
 		
 		~wxResult();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class About
+///////////////////////////////////////////////////////////////////////////////
+class About : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxStaticText* m_staticText15;
+		wxStaticText* m_staticText151;
+		wxStaticText* m_staticText16;
+		wxStaticText* m_staticText161;
+		wxHyperlinkCtrl* m_hyperlink1;
+	
+	public:
+		
+		About( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 446,191 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		
+		~About();
 	
 };
 

@@ -25,6 +25,7 @@ private:
 private:
 	void highlightCell(bool side);
 protected:
+	void about( wxKeyEvent& event )  override;
 	void PreemptivePriorityStrategy( wxCommandEvent& event )  override;
 	void NonPreemptivePriorityStrategy( wxCommandEvent& event )  override;
 	void RoundRobinStrategy( wxCommandEvent& event )  override;

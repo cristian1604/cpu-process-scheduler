@@ -29,10 +29,10 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 	stProcess aux;
 	for (int pos = 0; pos < P.size(); pos++) {
 		aux = P[pos].toStruct();
-		m_tablaProcesos->SetCellValue(aux.p_name, pos, 0);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_cpu)), pos, 1);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_arrival)), pos, 2);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_priority)), pos, 3);
+		m_tablaProcesos->SetCellValue(pos, 0, aux.p_name);
+		m_tablaProcesos->SetCellValue(pos, 1, (wxString::Format(wxT("%i"),aux.p_cpu)));
+		m_tablaProcesos->SetCellValue(pos, 2, (wxString::Format(wxT("%i"),aux.p_arrival)));
+		m_tablaProcesos->SetCellValue(pos, 3, (wxString::Format(wxT("%i"),aux.p_priority)));
 	}
 	
 	selection_color = m_button_rr->GetBackgroundColour();
@@ -154,9 +154,9 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		int row = P.size()-(P[i].getId());
 		stProcess aux = P[i].toStruct();
 		float is = (aux.p_cpu*1.0f)/aux.service_time;   // indice de servicio
-		m_table->SetCellValue((wxString::Format(wxT("%i"),aux.wait_time)), i, 1);
-		m_table->SetCellValue((wxString::Format(wxT("%i"),aux.service_time)), i, 2);
-		m_table->SetCellValue((wxString::Format(wxT("%.2f"),is)), i, 3);
+		m_table->SetCellValue(i, 1, (wxString::Format(wxT("%i"),aux.wait_time)));
+		m_table->SetCellValue(i, 2, (wxString::Format(wxT("%i"),aux.service_time)));
+		m_table->SetCellValue(i, 3, (wxString::Format(wxT("%.2f"),is)));
 		
 		// Diagrama de Gantt
 		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE || mode == PREEMPTIVE_PRIORITY_MODE || mode == NON_PREEMPTIVE_PRIORITY_MODE) {
@@ -178,7 +178,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 	}
 	m_table->AppendRows(1);
 	m_table->SetRowLabelValue(m_table->GetNumberRows()-1, "Avg");
-	m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_wt)), P.size(), 1);
+	m_table->SetCellValue(P.size(), 1, (wxString::Format(wxT("%.1f"),avg_wt)));
 	wxFont f;
 	f.SetWeight(wxFONTWEIGHT_BOLD);
 	m_table->SetCellFont(P.size(), 1, f);

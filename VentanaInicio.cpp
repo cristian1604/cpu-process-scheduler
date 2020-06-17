@@ -26,10 +26,10 @@ void VentanaInicio::quickLoad() {
 		stProcess aux;
 		for (int pos = 0; pos < P.size(); pos++) {
 			aux = P[pos].toStruct();
-			m_tablaProcesos->SetCellValue(aux.p_name, pos, 0);
-			m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_cpu)), pos, 1);
-			m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_arrival)), pos, 2);
-			m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_priority)), pos, 3);
+			m_tablaProcesos->SetCellValue(pos, 0, aux.p_name);
+			m_tablaProcesos->SetCellValue(pos, 1, (wxString::Format(wxT("%i"),aux.p_cpu)));
+			m_tablaProcesos->SetCellValue(pos, 2, (wxString::Format(wxT("%i"),aux.p_arrival)));
+			m_tablaProcesos->SetCellValue(pos, 3, (wxString::Format(wxT("%i"),aux.p_priority)));
 		}
 	}
 }
@@ -90,12 +90,6 @@ void VentanaInicio::process( wxCommandEvent& event )  {
 	//wxMessageBox("Guardado");
 	wxResults *res1 = new wxResults(this, ROUND_ROBIN_MODE, atoi(m_rr_quantum->GetValue()));
 	res1->Show();
-	/*wxResults *res2 = new wxResults(this, FCFS_MODE);
-	res2->Show();
-	wxResults *res3 = new wxResults(this, SRTF_MODE);
-	res3->Show();
-	wxResults *res4 = new wxResults(this, SJF_MODE);
-	res4->Show();*/
 }
 
 void VentanaInicio::verifyQuantum( wxKeyEvent& event )  {

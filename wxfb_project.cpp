@@ -421,11 +421,24 @@ About::About( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	m_staticText16->Wrap( -1 );
 	bSizer3->Add( m_staticText16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText161 = new wxStaticText( this, wxID_ANY, wxT("June 2020"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText161 = new wxStaticText( this, wxID_ANY, wxT("Version 0.8 - June 2020"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText161->Wrap( -1 );
 	bSizer3->Add( m_staticText161, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_hyperlink1 = new wxHyperlinkCtrl( this, wxID_ANY, wxT("Sourcecode on GitHub"), wxT("https://github.com/cristian1604/cpu-process-scheduler"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	wxGridSizer* gSizer7;
+	gSizer7 = new wxGridSizer( 0, 2, 0, 0 );
+
+	m_staticText17 = new wxStaticText( this, wxID_ANY, wxT("Icon: IronDevil"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText17->Wrap( -1 );
+	gSizer7->Add( m_staticText17, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_hyperlink2 = new wxHyperlinkCtrl( this, wxID_ANY, wxT(" ID's Space Lab Icons"), wxT("http://www.iconarchive.com/show/ids-space-lab-icons-by-iron-devil.html"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	gSizer7->Add( m_hyperlink2, 0, wxALL, 5 );
+
+
+	bSizer3->Add( gSizer7, 0, wxALIGN_CENTER_HORIZONTAL, 5 );
+
+	m_hyperlink1 = new wxHyperlinkCtrl( this, wxID_ANY, wxT("Source code on GitHub"), wxT("https://github.com/cristian1604/cpu-process-scheduler"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
 	bSizer3->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 

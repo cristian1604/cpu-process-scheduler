@@ -126,11 +126,13 @@ class About : public wxFrame
 		wxStaticText* m_staticText151;
 		wxStaticText* m_staticText16;
 		wxStaticText* m_staticText161;
+		wxStaticText* m_staticText17;
+		wxHyperlinkCtrl* m_hyperlink2;
 		wxHyperlinkCtrl* m_hyperlink1;
 
 	public:
 
-		About( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 446,191 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		About( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 446,201 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~About();
 

@@ -8,7 +8,7 @@
 using namespace std;
 
 
-class VentanaInicio : public wxfbExample {
+class VentanaInicio : public wxMain {
 private:
 	int selectedRow;
 	vector <Process> P;

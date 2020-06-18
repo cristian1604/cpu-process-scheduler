@@ -1,17 +1,17 @@
 #include "VentanaInicio.h"
 #include <iostream>
 #include <wx/msgdlg.h>
-#include "wxResults.h"
 
 #define ROUND_ROBIN_MODE 1
 #define FCFS_MODE 2
 #define SRTF_MODE 3
 #define SJF_MODE 4
 #include "wxAbout.h"
+#include "wxResults.h"
 
 using namespace std;
 
-VentanaInicio::VentanaInicio(wxWindow *parent) : wxfbExample(parent){
+VentanaInicio::VentanaInicio(wxWindow *parent) : wxMain(parent){
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
 		m_tablaProcesos->SetColSize(i, 150);
 	}

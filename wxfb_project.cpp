@@ -325,9 +325,35 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	m_strategy_type = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("APROPIATIVA"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_strategy_type->Wrap( -1 );
+	m_strategy_type->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
 	m_strategy_type->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
 	gSizer5->Add( m_strategy_type, 0, wxALL, 5 );
+
+	m_staticText13 = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("Referencias:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText13->Wrap( -1 );
+	gSizer5->Add( m_staticText13, 0, wxALL, 5 );
+
+
+	gSizer5->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText14 = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("▬ EJECUCIÓN"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText14->Wrap( -1 );
+	m_staticText14->SetFont( wxFont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+	m_staticText14->SetForegroundColour( wxColour( 255, 0, 0 ) );
+
+	gSizer5->Add( m_staticText14, 0, wxALL, 5 );
+
+
+	gSizer5->Add( 0, 0, 1, wxEXPAND, 5 );
+
+	m_staticText15 = new wxStaticText( sbSizer1->GetStaticBox(), wxID_ANY, wxT("▬ ESPERA"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText15->Wrap( -1 );
+	m_staticText15->SetFont( wxFont( 9, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false, wxT("Arial") ) );
+	m_staticText15->SetForegroundColour( wxColour( 103, 162, 184 ) );
+	m_staticText15->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+
+	gSizer5->Add( m_staticText15, 0, wxALL, 5 );
 
 
 	sbSizer1->Add( gSizer5, 1, wxEXPAND, 5 );

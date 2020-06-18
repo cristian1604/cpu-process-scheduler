@@ -90,6 +90,9 @@ class wxResult : public wxFrame
 		wxGrid* m_gantt;
 		wxStaticText* m_staticText7;
 		wxStaticText* m_strategy_type;
+		wxStaticText* m_staticText13;
+		wxStaticText* m_staticText14;
+		wxStaticText* m_staticText15;
 
 		// Virtual event handlers, overide them in your derived class
 		virtual void about( wxKeyEvent& event ) { event.Skip(); }

@@ -16,7 +16,7 @@ tab_use_spaces=0
 explorer_path=.
 inspection_improving_template=wxString|>printf "%ls",${EXP}.m_impl._M_data()
 inherits_from=
-current_source=wxResults.cpp
+current_source=wxAbout.cpp
 path_char=\
 [source]
 path=Application.cpp
@@ -40,7 +40,7 @@ cursor=62:19
 open=true
 [source]
 path=wxAbout.cpp
-cursor=0:0
+cursor=10:0
 open=true
 [source]
 path=RoundRobin.cpp
@@ -64,7 +64,7 @@ path=PriorityNonPreemptive.cpp
 cursor=0:0
 [source]
 path=wxResults.cpp
-cursor=165:65
+cursor=181:10
 open=true
 [header]
 path=Application.h
@@ -109,7 +109,7 @@ path=PriorityNonPreemptive.h
 cursor=7:17
 [header]
 path=wxAbout.h
-cursor=0:0
+cursor=5:1
 open=true
 [other]
 path=Readme.txt
@@ -228,7 +228,7 @@ env_vars=PATH+=;${MINGW_DIR}\wx3\bin
 wait_for_key=0
 temp_folder=release.w32
 output_file=${TEMP_DIR}\sheduler.exe
-icon_file=
+icon_file=Iron-Devil-Ids-Space-Lab-Space-Food.ico
 manifest_file=manifest.xml
 compiling_extra=-Wno-unused-local-typedefs
 macros=

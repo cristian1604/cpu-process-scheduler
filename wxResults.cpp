@@ -148,7 +148,7 @@ void wxResults::solveNonPreemptivePriority() {
 void wxResults::displayResults(float avg_wt, float avg_st) {
 	int cols = P[0].Gantt.size();
 	m_gantt->AppendRows(P.size());
-	m_gantt->AppendCols(cols);
+	m_gantt->AppendCols(cols+1);
 		
 	for (int i = 0; i < P.size(); i++) {
 		int row = P.size()-(P[i].getId());
@@ -170,12 +170,17 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 					m_gantt->SetCellBackgroundColour(row, j, wxColour(255, 0, 0));
 				}
 				
-				m_gantt->SetColLabelValue(j, (wxString::Format(wxT("%i"),j+1)));
+				m_gantt->SetColLabelValue(j, (wxString::Format(wxT("%i"),j)));
 				m_gantt->SetRowLabelValue(row, aux.p_name);
 				m_gantt->SetRowLabelSize(15*strlen(aux.p_name));
 			}
 		}
 	}
+	
+	// Agregar una última columna 
+	m_gantt->SetColLabelValue(cols, (wxString::Format(wxT("%i"),cols)));
+	m_gantt->SetColSize(cols, 30);
+	
 	m_table->AppendRows(1);
 	m_table->SetRowLabelValue(m_table->GetNumberRows()-1, "Avg");
 	m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_wt)), P.size(), 1);

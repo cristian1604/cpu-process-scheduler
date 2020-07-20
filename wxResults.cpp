@@ -94,51 +94,63 @@ void wxResults::executeStrategy() {
 }
 
 void wxResults::solveRoundRobin() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	RoundRobin RR;
 	RR.SolveGantt(P, rr_quantum, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveSJF() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	SJF _SJF;
 	_SJF.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveSRTF() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	SRT _SRT;
 	_SRT.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveFCFS() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	FCFS _FCFS;
 	_FCFS.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solvePreemptivePriority() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	PriorityPreemptive _PP;
 	_PP.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveNonPreemptivePriority() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	PriorityNonPreemptive _PNP;
 	_PNP.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 #define NONE -1
@@ -182,7 +194,6 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 	wxFont f;
 	f.SetWeight(wxFONTWEIGHT_BOLD);
 	m_table->SetCellFont(P.size(), 1, f);
-	//m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_st)), P.size(), 2);
 	m_table->SetCellBackgroundColour(P.size(), 1, wxColour(117, 223, 230));
 	
 }
@@ -208,24 +219,28 @@ void wxResults::highlightCell(bool side) {
 	}
 	// clear background color
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
-		for (int j = 0; j < m_tablaProcesos->GetNumberRows(); j++) {
+		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+1; j++) {
 			m_tablaProcesos->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 		}
 	}
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
-		for (int j = 0; j < m_table->GetNumberRows(); j++) {
+		for (int j = 0; j < m_table->GetNumberRows()+1; j++) {
 			m_table->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 		}
+	}
+	
+	if (row > P.size()-1) {
+		return;
 	}
 	
 	// Colouring rows
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
 		m_table->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
-		m_table->Refresh(false);
+		m_table->Refresh(true);
 	}
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
 		m_tablaProcesos->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
-		m_tablaProcesos->Refresh(false);
+		m_tablaProcesos->Refresh(true);
 	}
 }
 

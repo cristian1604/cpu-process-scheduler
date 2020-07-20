@@ -219,12 +219,8 @@ void wxResults::highlightCell(bool side) {
 	}
 	// clear background color
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
-		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+1; j++) {
+		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+2; j++) {
 			m_tablaProcesos->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
-		}
-	}
-	for (int i = 0; i < m_table->GetNumberCols(); i++) {
-		for (int j = 0; j < m_table->GetNumberRows()+1; j++) {
 			m_table->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 		}
 	}

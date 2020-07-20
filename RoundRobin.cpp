@@ -2,6 +2,8 @@
 #include <vector>
 #include "Process.h"
 #include <iostream>
+#include <list>
+#include <cstring>
 using namespace std;
 
 RoundRobin::RoundRobin() {
@@ -12,7 +14,26 @@ RoundRobin::RoundRobin() {
 #define WAITING 0
 #define PROCESSING 1
 
+void makeFIFO(list <Process> &ProcessList, list <Process> &FIFO, int bt, int total_burst) {
+	list <Process>::iterator itL = ProcessList.begin();
+	while (!ProcessList.empty() && itL != ProcessList.end()) {
+		if (itL->getArrivalTime() <= bt) {
+			//cout<<"Inserto proceso "<<itL->getProcessName()<<" que llega en "<<itL->getArrivalTime()<<" en tiempo "<<bt<<endl;
+			FIFO.push_back(*itL);
+			((--FIFO.end())->Gantt).resize(total_burst, NONE);
+			itL = ProcessList.erase(itL);
+		} else {
+			++itL;
+		}
+	}
+}
+
 void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, float &avg_st) {
+	// Lista de procesos
+	list <Process> ProcessList;
+	list <Process> FIFO;
+	vector <Process> Res;
+	
 	// Para conocer la longitud del diagrama, sumo todos los burst-time
 	int total_burst = 0;
 	for (int i = 0; i < P.size(); i++) {
@@ -20,47 +41,82 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 		total_burst += P[i].getCpuTime();
 	}
 	
-	// ordenar vector por timepo de llegada de cada proceso
-	// empleo bubble sort, ya que la cantidad de elementos admite un ordenamiento O(n²)
-	Process aux;
+	// Llenar la ProcessList
 	for (int i = 0; i < P.size(); i++) {
-		for (int j = i; j < P.size(); j++) {
-			if (P[j].getArrivalTime() < P[i].getArrivalTime()) {
-				aux = P[i];
-				P[i] = P[j];
-				P[j] = aux;
-			}
+		ProcessList.insert(ProcessList.end(), P[i]);
+	}
+	
+	int bt = 0;
+	list <Process>::iterator itL;
+	makeFIFO(ProcessList, FIFO, bt, total_burst);
+	
+	while (true) {		
+		
+		if (FIFO.size() == 0 && !ProcessList.empty()) {
+			continue;
 		}
 		
-		// Establecer los vectores de Gantt de cada proceso en cero
-		P[i].Gantt.resize(total_burst);
-		for (int j = 0; j < total_burst; j++) {
-			P[i].Gantt[j] = NONE;
+		int q = 0;
+		itL = FIFO.begin();
+		if (itL == FIFO.end()) break;
+		int remaining_bursts = itL->getCpuTime();
+		while (q < quantum && remaining_bursts > 0) {
+			itL->Gantt[bt++] = PROCESSING;
+			--remaining_bursts;
+			++q;
 		}
+	
+		itL->setCpuTime(remaining_bursts);
+		
+		makeFIFO(ProcessList, FIFO, bt, total_burst);
+		
+		if (itL->getCpuTime() > 0) {
+			FIFO.insert(FIFO.end(), *itL);
+		}
+		
+		if (itL->getCpuTime() == 0) {
+			Res.push_back(*itL);
+		}
+		
+		FIFO.erase(FIFO.begin());
+		
+		if (ProcessList.size() == P.size() && FIFO.empty()) break;
 	}
 	
-	avg_st = 0;
-	int remaining_bursts;					// Ráfagas de CPU restantes
-	int bt = 0;
-	vector <Process> queue = P;
 	
-	while (bt < total_burst) {
-		for (int pos = 0; pos < P.size(); pos++) {
-			if (bt < P[pos].getArrivalTime()) {continue;}
-			remaining_bursts = queue[pos].getCpuTime();
-			if (remaining_bursts == 0) { continue; }
-			
-			for (int q = 0; q < quantum; q++) {				
-				
-				P[pos].Gantt[bt++] = PROCESSING;	
-				
-				if (--remaining_bursts == 0) { break; }
-				
+	// Reestablecer las variables CPUTime
+	for (int i = 0; i < P.size(); i++) {
+		for (int j = 0; j < Res.size(); j++) {
+			if (P[i].getId() == Res[j].getId()) {
+				P[i].Gantt = Res[j].Gantt;
+				break;
 			}
-			queue[pos].setCpuTime(remaining_bursts);
 		}
 	}
+	
 	avg_wt = calculateWaitingTimes(P);
+	
+	/*
+	// Show Gantt Diagram on console
+	for (int i = 0; i < P.size(); i++) {
+		cout<<P[i].getProcessName()<<": ";
+		for (int k = 0; k < (P[i].Gantt).size(); k++) {
+			switch(P[i].Gantt[k]){
+			case NONE:
+				cout<<".";
+				break;
+			case PROCESSING:
+				cout<<"X";
+				break;
+			case WAITING:
+				cout<<"w";
+				break;
+			}
+		}
+		cout<<endl;
+	}
+	*/
+	
 }
 
 
@@ -69,11 +125,12 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 float RoundRobin::calculateWaitingTimes(vector <Process> &P) {
 	float res = 0;
 	int wt;
+	
 	for (int i = 0; i < P.size(); i++) {
 		bool started = false;
 		int bursts = P[i].getCpuTime();
 		wt = 0;
-		for (int j = 0; j < P[i].Gantt.size(); j++) {
+		for (int j = 0; j < (P[i].Gantt).size(); j++) {
 			if (P[i].Gantt[j] == PROCESSING) {
 				started = true;
 				--bursts;
@@ -88,5 +145,6 @@ float RoundRobin::calculateWaitingTimes(vector <Process> &P) {
 		P[i].setServiceTime(wt+P[i].getCpuTime());
 		P[i].setWaitTime(wt);
 	}
+	
 	return res/P.size();
 }

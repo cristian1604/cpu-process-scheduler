@@ -20,13 +20,18 @@ private:
 	int rr_quantum;
 	int mode;
 	bool apropiative_mode;
+	bool orden_inverso;
 	wxColour selection_color;
 	wxColour unselected_color;
 	
 	void highlightCell(bool side);
 	
 protected:
-	void about( wxKeyEvent& event )  override;
+	void keyEvent( wxKeyEvent& event )  override;
+	void invertOrder( wxCommandEvent& event )  override;
+	void showGrid( wxCommandEvent& event )  override;
+	void hideGrid( wxCommandEvent& event )  override;
+	void displayGanttMenu( wxGridEvent& event )  override;
 	void PreemptivePriorityStrategy( wxCommandEvent& event )  override;
 	void NonPreemptivePriorityStrategy( wxCommandEvent& event )  override;
 	void RoundRobinStrategy( wxCommandEvent& event )  override;

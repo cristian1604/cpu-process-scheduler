@@ -26,6 +26,7 @@
 #include <wx/frame.h>
 #include <wx/statline.h>
 #include <wx/statbox.h>
+#include <wx/menu.h>
 #include <wx/hyperlink.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -61,7 +62,7 @@ class wxMain : public wxFrame
 
 	public:
 
-		wxMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sistemas Operativos - Planificador de procesos"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 763,459 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		wxMain( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Sistemas Operativos - Planificador de procesos"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 823,514 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~wxMain();
 
@@ -93,9 +94,10 @@ class wxResult : public wxFrame
 		wxStaticText* m_staticText13;
 		wxStaticText* m_staticText14;
 		wxStaticText* m_staticText15;
+		wxMenu* m_menu1;
 
 		// Virtual event handlers, overide them in your derived class
-		virtual void about( wxKeyEvent& event ) { event.Skip(); }
+		virtual void keyEvent( wxKeyEvent& event ) { event.Skip(); }
 		virtual void RoundRobinStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SRTFStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void FCFSStrategy( wxCommandEvent& event ) { event.Skip(); }
@@ -104,13 +106,22 @@ class wxResult : public wxFrame
 		virtual void NonPreemptivePriorityStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void highlightDataCell( wxGridEvent& event ) { event.Skip(); }
 		virtual void highlightResultsCell( wxGridEvent& event ) { event.Skip(); }
+		virtual void displayGanttMenu( wxGridEvent& event ) { event.Skip(); }
+		virtual void showGrid( wxCommandEvent& event ) { event.Skip(); }
+		virtual void hideGrid( wxCommandEvent& event ) { event.Skip(); }
+		virtual void invertOrder( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 
-		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,559 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		wxResult( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Resultado"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1200,637 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~wxResult();
+
+		void wxResultOnContextMenu( wxMouseEvent &event )
+		{
+			this->PopupMenu( m_menu1, event.GetPosition() );
+		}
 
 };
 

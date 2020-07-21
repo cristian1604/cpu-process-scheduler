@@ -45,7 +45,7 @@
             <property name="minimum_size"></property>
             <property name="name">wxMain</property>
             <property name="pos"></property>
-            <property name="size">763,459</property>
+            <property name="size">823,514</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Sistemas Operativos - Planificador de procesos</property>
@@ -411,7 +411,7 @@
                                 <property name="gripper">0</property>
                                 <property name="hidden">0</property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Presione la tecla + para agregar un nuevo proceso.&#x0A;Presione la tecla - para quitar un proceso de la tabla&#x0A;Presione F9 para realizar la simulación</property>
+                                <property name="label">Presione la tecla + para agregar un nuevo proceso.&#x0A;Presione la tecla - para quitar el proceso seleccionado&#x0A;Presione F9 para realizar la simulación</property>
                                 <property name="markup">0</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -594,7 +594,7 @@
                                 <property name="style"></property>
                                 <property name="subclass"></property>
                                 <property name="toolbar_pane">0</property>
-                                <property name="tooltip"></property>
+                                <property name="tooltip">Sólo válido para planificación Round Robin</property>
                                 <property name="validator_data_type"></property>
                                 <property name="validator_style">wxFILTER_NUMERIC</property>
                                 <property name="validator_type">wxGenericValidator</property>
@@ -788,7 +788,7 @@
             <property name="minimum_size"></property>
             <property name="name">wxResult</property>
             <property name="pos"></property>
-            <property name="size">1200,559</property>
+            <property name="size">1200,637</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Resultado</property>
@@ -797,7 +797,7 @@
             <property name="window_name"></property>
             <property name="window_style">wxTAB_TRAVERSAL</property>
             <property name="xrc_skip_sizer">1</property>
-            <event name="OnKeyDown">about</event>
+            <event name="OnKeyDown">keyEvent</event>
             <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer2</property>
@@ -890,7 +890,7 @@
                                 <property name="aui_position"></property>
                                 <property name="aui_row"></property>
                                 <property name="best_size"></property>
-                                <property name="bg">wxSYS_COLOUR_ACTIVECAPTION</property>
+                                <property name="bg">wxSYS_COLOUR_HIGHLIGHT</property>
                                 <property name="bitmap"></property>
                                 <property name="caption"></property>
                                 <property name="caption_visible">1</property>
@@ -1736,7 +1736,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="grid_line_color"></property>
-                        <property name="grid_lines">0</property>
+                        <property name="grid_lines">1</property>
                         <property name="gripper">0</property>
                         <property name="hidden">0</property>
                         <property name="id">wxID_ANY</property>
@@ -1774,6 +1774,7 @@
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
                         <property name="window_style"></property>
+                        <event name="OnGridCellRightClick">displayGanttMenu</event>
                     </object>
                 </object>
                 <object class="sizeritem" expanded="1">
@@ -2142,6 +2143,57 @@
                             </object>
                         </object>
                     </object>
+                </object>
+            </object>
+            <object class="wxMenu" expanded="1">
+                <property name="label">MyMenu</property>
+                <property name="name">m_menu1</property>
+                <property name="permission">protected</property>
+                <object class="wxMenuItem" expanded="1">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_CHECK</property>
+                    <property name="label">Mostrar grilla</property>
+                    <property name="name">m_menuItem1</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection">showGrid</event>
+                </object>
+                <object class="wxMenuItem" expanded="1">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Ocultar grilla</property>
+                    <property name="name">m_menuItem2</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection">hideGrid</event>
+                </object>
+                <object class="separator" expanded="1">
+                    <property name="name">m_separator1</property>
+                    <property name="permission">none</property>
+                </object>
+                <object class="wxMenuItem" expanded="1">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_CHECK</property>
+                    <property name="label">Invertir orden de resultados</property>
+                    <property name="name">m_menuItem3</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection">invertOrder</event>
                 </object>
             </object>
         </object>

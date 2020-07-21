@@ -74,7 +74,7 @@ wxMain::wxMain( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 
 	gSizer2->Add( m_delRow, 0, wxALL, 5 );
 
-	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Presione la tecla + para agregar un nuevo proceso.\nPresione la tecla - para quitar un proceso de la tabla\nPresione F9 para realizar la simulación"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("Presione la tecla + para agregar un nuevo proceso.\nPresione la tecla - para quitar el proceso seleccionado\nPresione F9 para realizar la simulación"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
 	m_staticText2->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
 
@@ -107,6 +107,8 @@ wxMain::wxMain( wxWindow* parent, wxWindowID id, const wxString& title, const wx
 	#else
 	m_rr_quantum->SetMaxLength( 2 );
 	#endif
+	m_rr_quantum->SetToolTip( wxT("Sólo válido para planificación Round Robin") );
+
 	gSizer2->Add( m_rr_quantum, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 
@@ -171,7 +173,7 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	gSizer4->Add( m_staticText8, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 
 	m_button_rr = new wxButton( this, wxID_ANY, wxT("Round Robin"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_button_rr->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_ACTIVECAPTION ) );
+	m_button_rr->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
 
 	gSizer4->Add( m_button_rr, 0, wxALL, 5 );
 
@@ -288,7 +290,7 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	// Grid
 	m_gantt->CreateGrid( 0, 0 );
 	m_gantt->EnableEditing( true );
-	m_gantt->EnableGridLines( false );
+	m_gantt->EnableGridLines( true );
 	m_gantt->EnableDragGridSize( false );
 	m_gantt->SetMargins( 0, 0 );
 
@@ -367,11 +369,28 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	this->SetSizer( bSizer2 );
 	this->Layout();
+	m_menu1 = new wxMenu();
+	wxMenuItem* m_menuItem1;
+	m_menuItem1 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Mostrar grilla") ) , wxEmptyString, wxITEM_CHECK );
+	m_menu1->Append( m_menuItem1 );
+
+	wxMenuItem* m_menuItem2;
+	m_menuItem2 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Ocultar grilla") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( m_menuItem2 );
+
+	m_menu1->AppendSeparator();
+
+	wxMenuItem* m_menuItem3;
+	m_menuItem3 = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Invertir orden de resultados") ) , wxEmptyString, wxITEM_CHECK );
+	m_menu1->Append( m_menuItem3 );
+
+	this->Connect( wxEVT_RIGHT_DOWN, wxMouseEventHandler( wxResult::wxResultOnContextMenu ), NULL, this );
+
 
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::about ) );
+	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::keyEvent ) );
 	m_button_rr->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -380,12 +399,16 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_nonpreemptivepriority->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::NonPreemptivePriorityStrategy ), NULL, this );
 	m_tablaProcesos->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Connect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
+	m_gantt->Connect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( wxResult::displayGanttMenu ), NULL, this );
+	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxResult::showGrid ), this, m_menuItem1->GetId());
+	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxResult::hideGrid ), this, m_menuItem2->GetId());
+	m_menu1->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( wxResult::invertOrder ), this, m_menuItem3->GetId());
 }
 
 wxResult::~wxResult()
 {
 	// Disconnect Events
-	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::about ) );
+	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::keyEvent ) );
 	m_button_rr->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -394,7 +417,9 @@ wxResult::~wxResult()
 	m_button_nonpreemptivepriority->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::NonPreemptivePriorityStrategy ), NULL, this );
 	m_tablaProcesos->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightDataCell ), NULL, this );
 	m_table->Disconnect( wxEVT_GRID_CELL_LEFT_DCLICK, wxGridEventHandler( wxResult::highlightResultsCell ), NULL, this );
+	m_gantt->Disconnect( wxEVT_GRID_CELL_RIGHT_CLICK, wxGridEventHandler( wxResult::displayGanttMenu ), NULL, this );
 
+	delete m_menu1;
 }
 
 About::About( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )

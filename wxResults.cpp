@@ -10,6 +10,7 @@
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
 	mode = modo;
+	orden_inverso = false;
 	
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
 		m_table->SetColSize(i, 150);
@@ -164,6 +165,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		
 	for (int i = 0; i < P.size(); i++) {
 		int row = P.size()-(P[i].getId());
+		if (orden_inverso) row = i;
 		stProcess aux = P[i].toStruct();
 		float is = (aux.p_cpu*1.0f)/aux.service_time;   // indice de servicio
 		m_table->SetCellValue(i, 1, (wxString::Format(wxT("%i"),aux.wait_time)));
@@ -251,7 +253,7 @@ void wxResults::highlightCell(bool side) {
 		}
 	}
 	
-	if (row > P.size()-1) {
+	if (row >= P.size()) {
 		return;
 	}
 	
@@ -321,12 +323,56 @@ void wxResults::ClearAll() {
 	m_table->DeleteRows(m_table->GetNumberRows()-1, 1);
 }
 
-void wxResults::about( wxKeyEvent& event )  {
+void wxResults::displayGanttMenu( wxGridEvent& event )  {
+	(m_menu1->FindItemByPosition(0))->Check(m_gantt->GridLinesEnabled());
+	PopupMenu(m_menu1);
+}
+
+void wxResults::showGrid( wxCommandEvent& event )  {
+	m_gantt->EnableGridLines(!m_gantt->GridLinesEnabled());
+}
+
+void wxResults::hideGrid( wxCommandEvent& event )  {
+	m_gantt->EnableGridLines(false);
+	event.Skip();
+}
+
+void wxResults::invertOrder( wxCommandEvent& event )  {
+	orden_inverso = !orden_inverso;
+	(m_menu1->FindItemByPosition(3))->Check(orden_inverso);
+	ClearAll();
+	executeStrategy();
+}
+
+void wxResults::keyEvent( wxKeyEvent& event )  {
 	if (event.GetKeyCode() == WXK_F1) {
 		wxAbout *w = new wxAbout;
 		w->Show();
-	} else {
-		event.Skip();
+		return;
+	}
+	
+	wxCommandEvent null;
+	switch(event.GetKeyCode()) {
+	case WXK_NUMPAD1: case 49:
+		RoundRobinStrategy(null);
+		break;
+	case WXK_NUMPAD2: case 50:
+		SRTFStrategy(null);
+		break;
+	case WXK_NUMPAD3: case 51:
+		FCFSStrategy(null);
+		break;
+	case WXK_NUMPAD4: case 52:
+		SJFStrategy(null);
+		break;
+	case WXK_NUMPAD5: case 53:
+		PreemptivePriorityStrategy(null);
+		break;
+	case WXK_NUMPAD6: case 54:
+		NonPreemptivePriorityStrategy(null);
+		break;
+	default:
+		return;
 	}
 }
 

@@ -421,9 +421,9 @@ About::About( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	m_staticText16->Wrap( -1 );
 	bSizer3->Add( m_staticText16, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
-	m_staticText161 = new wxStaticText( this, wxID_ANY, wxT("Version 0.8 - June 2020"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText161->Wrap( -1 );
-	bSizer3->Add( m_staticText161, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	m_version = new wxStaticText( this, wxID_ANY, wxT("Version 0.8 - June 2020"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_version->Wrap( -1 );
+	bSizer3->Add( m_version, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 
 	wxGridSizer* gSizer7;
 	gSizer7 = new wxGridSizer( 0, 2, 0, 0 );

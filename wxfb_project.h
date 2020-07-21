@@ -125,7 +125,7 @@ class About : public wxFrame
 		wxStaticText* m_staticText15;
 		wxStaticText* m_staticText151;
 		wxStaticText* m_staticText16;
-		wxStaticText* m_staticText161;
+		wxStaticText* m_version;
 		wxStaticText* m_staticText17;
 		wxHyperlinkCtrl* m_hyperlink2;
 		wxHyperlinkCtrl* m_hyperlink1;

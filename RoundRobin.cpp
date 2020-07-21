@@ -65,7 +65,7 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 			--remaining_bursts;
 			++q;
 		}
-		
+	
 		itL->setCpuTime(remaining_bursts);
 		
 		makeFIFO(ProcessList, FIFO, bt, total_burst);
@@ -99,21 +99,21 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 	/*
 	// Show Gantt Diagram on console
 	for (int i = 0; i < P.size(); i++) {
-	cout<<P[i].getProcessName()<<": ";
-	for (int k = 0; k < (P[i].Gantt).size(); k++) {
-	switch(P[i].Gantt[k]){
-	case NONE:
-	cout<<".";
-	break;
-	case PROCESSING:
-	cout<<"X";
-	break;
-	case WAITING:
-	cout<<"w";
-	break;
-	}
-	}
-	cout<<endl;
+		cout<<P[i].getProcessName()<<": ";
+		for (int k = 0; k < (P[i].Gantt).size(); k++) {
+			switch(P[i].Gantt[k]){
+			case NONE:
+				cout<<".";
+				break;
+			case PROCESSING:
+				cout<<"X";
+				break;
+			case WAITING:
+				cout<<"w";
+				break;
+			}
+		}
+		cout<<endl;
 	}
 	*/
 	
@@ -121,7 +121,7 @@ void RoundRobin::SolveGantt(vector <Process> &P, int quantum, float &avg_wt, flo
 
 
 // Calcular tiempos de espera entre turnos de procesamiento en RoundRobin
-// Calcula tanto los ServiceTime y los WaitTime, como también setea las esperas en el vector de Gantt
+// Calcula tanto los ServiceTime y los WaitTime, como tambiï¿½n setea las esperas en el vector de Gantt
 float RoundRobin::calculateWaitingTimes(vector <Process> &P) {
 	float res = 0;
 	int wt;

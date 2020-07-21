@@ -10,6 +10,7 @@
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
 	mode = modo;
+	orden_inverso = false;
 	
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
 		m_table->SetColSize(i, 150);
@@ -29,10 +30,10 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 	stProcess aux;
 	for (int pos = 0; pos < P.size(); pos++) {
 		aux = P[pos].toStruct();
-		m_tablaProcesos->SetCellValue(aux.p_name, pos, 0);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_cpu)), pos, 1);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_arrival)), pos, 2);
-		m_tablaProcesos->SetCellValue((wxString::Format(wxT("%i"),aux.p_priority)), pos, 3);
+		m_tablaProcesos->SetCellValue(pos, 0, aux.p_name);
+		m_tablaProcesos->SetCellValue(pos, 1, (wxString::Format(wxT("%i"),aux.p_cpu)));
+		m_tablaProcesos->SetCellValue(pos, 2, (wxString::Format(wxT("%i"),aux.p_arrival)));
+		m_tablaProcesos->SetCellValue(pos, 3, (wxString::Format(wxT("%i"),aux.p_priority)));
 	}
 	
 	selection_color = m_button_rr->GetBackgroundColour();
@@ -94,51 +95,63 @@ void wxResults::executeStrategy() {
 }
 
 void wxResults::solveRoundRobin() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	RoundRobin RR;
 	RR.SolveGantt(P, rr_quantum, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveSJF() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	SJF _SJF;
 	_SJF.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveSRTF() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	SRT _SRT;
 	_SRT.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveFCFS() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	FCFS _FCFS;
 	_FCFS.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solvePreemptivePriority() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	PriorityPreemptive _PP;
 	_PP.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 void wxResults::solveNonPreemptivePriority() {
+	vector <Process> Tmp = P;
 	float avg_wt;
 	float avg_st;
 	PriorityNonPreemptive _PNP;
 	_PNP.SolveGantt(P, avg_wt, avg_st);
 	displayResults(avg_wt, avg_st);
+	P = Tmp;
 }
 
 #define NONE -1
@@ -152,11 +165,13 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		
 	for (int i = 0; i < P.size(); i++) {
 		int row = P.size()-(P[i].getId());
+		if (orden_inverso) row = i;
 		stProcess aux = P[i].toStruct();
 		float is = (aux.p_cpu*1.0f)/aux.service_time;   // indice de servicio
-		m_table->SetCellValue((wxString::Format(wxT("%i"),aux.wait_time)), i, 1);
-		m_table->SetCellValue((wxString::Format(wxT("%i"),aux.service_time)), i, 2);
-		m_table->SetCellValue((wxString::Format(wxT("%.2f"),is)), i, 3);
+		m_table->SetCellValue(i, 1, (wxString::Format(wxT("%i"),aux.wait_time)));
+		m_table->SetCellValue(i, 2, (wxString::Format(wxT("%i"),aux.service_time)));
+		m_table->SetCellValue(i, 3, (wxString::Format(wxT("%.2f"),is)));
+		m_table->SetRowLabelValue(i, P[i].getProcessName());
 		
 		// Diagrama de Gantt
 		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE || mode == PREEMPTIVE_PRIORITY_MODE || mode == NON_PREEMPTIVE_PRIORITY_MODE) {
@@ -183,13 +198,37 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 	
 	m_table->AppendRows(1);
 	m_table->SetRowLabelValue(m_table->GetNumberRows()-1, "Avg");
-	m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_wt)), P.size(), 1);
+	m_table->SetCellValue(P.size(), 1, (wxString::Format(wxT("%.1f"),avg_wt)));
 	wxFont f;
 	f.SetWeight(wxFONTWEIGHT_BOLD);
 	m_table->SetCellFont(P.size(), 1, f);
-	//m_table->SetCellValue((wxString::Format(wxT("%.1f"),avg_st)), P.size(), 2);
 	m_table->SetCellBackgroundColour(P.size(), 1, wxColour(117, 223, 230));
 	
+	calculateAverages();
+}
+
+void wxResults::calculateAverages() {
+	int rows = m_tablaProcesos->GetNumberRows();
+	float avg_st = 0;
+	double avg_si = 0;
+	double aux;
+	
+	for (int i = 0; i < rows; i++) {
+		avg_st += wxAtoi(m_table->GetCellValue(i, 2));
+		(m_table->GetCellValue(i, 3)).ToDouble(&aux);
+		avg_si += aux;
+	}
+	avg_st = avg_st/rows;
+	avg_si = avg_si/rows;
+	
+	m_table->SetCellValue(P.size(), 2, (wxString::Format(wxT("%.2f"),avg_st)));
+	m_table->SetCellValue(P.size(), 3, (wxString::Format(wxT("%.0f"),avg_si*100)) + "%");
+	wxFont f;
+	f.SetWeight(wxFONTWEIGHT_BOLD);
+	m_table->SetCellFont(P.size(), 2, f);
+	m_table->SetCellFont(P.size(), 3, f);
+	m_table->SetCellBackgroundColour(P.size(), 2, wxColour(117, 223, 230));
+	m_table->SetCellBackgroundColour(P.size(), 3, wxColour(117, 223, 230));
 }
 
 wxResults::~wxResults() {
@@ -212,25 +251,25 @@ void wxResults::highlightCell(bool side) {
 		col = m_table->GetGridCursorCol();
 	}
 	// clear background color
-	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
-		for (int j = 0; j < m_tablaProcesos->GetNumberRows(); j++) {
+	for (int i = 0; i < m_tablaProcesos->GetNumberCols()+1; i++) {
+		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+1; j++) {
 			m_tablaProcesos->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
-		}
-	}
-	for (int i = 0; i < m_table->GetNumberCols(); i++) {
-		for (int j = 0; j < m_table->GetNumberRows(); j++) {
 			m_table->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 		}
+	}
+	
+	if (row >= P.size()) {
+		return;
 	}
 	
 	// Colouring rows
 	for (int i = 0; i < m_table->GetNumberCols(); i++) {
 		m_table->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
-		m_table->Refresh(false);
+		m_table->Refresh(true);
 	}
 	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
 		m_tablaProcesos->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
-		m_tablaProcesos->Refresh(false);
+		m_tablaProcesos->Refresh(true);
 	}
 }
 
@@ -289,12 +328,56 @@ void wxResults::ClearAll() {
 	m_table->DeleteRows(m_table->GetNumberRows()-1, 1);
 }
 
-void wxResults::about( wxKeyEvent& event )  {
+void wxResults::displayGanttMenu( wxGridEvent& event )  {
+	(m_menu1->FindItemByPosition(0))->Check(m_gantt->GridLinesEnabled());
+	PopupMenu(m_menu1);
+}
+
+void wxResults::showGrid( wxCommandEvent& event )  {
+	m_gantt->EnableGridLines(!m_gantt->GridLinesEnabled());
+}
+
+void wxResults::hideGrid( wxCommandEvent& event )  {
+	m_gantt->EnableGridLines(false);
+	event.Skip();
+}
+
+void wxResults::invertOrder( wxCommandEvent& event )  {
+	orden_inverso = !orden_inverso;
+	(m_menu1->FindItemByPosition(3))->Check(orden_inverso);
+	ClearAll();
+	executeStrategy();
+}
+
+void wxResults::keyEvent( wxKeyEvent& event )  {
 	if (event.GetKeyCode() == WXK_F1) {
 		wxAbout *w = new wxAbout;
 		w->Show();
-	} else {
-		event.Skip();
+		return;
+	}
+	
+	wxCommandEvent null;
+	switch(event.GetKeyCode()) {
+	case WXK_NUMPAD1: case 49:
+		RoundRobinStrategy(null);
+		break;
+	case WXK_NUMPAD2: case 50:
+		SRTFStrategy(null);
+		break;
+	case WXK_NUMPAD3: case 51:
+		FCFSStrategy(null);
+		break;
+	case WXK_NUMPAD4: case 52:
+		SJFStrategy(null);
+		break;
+	case WXK_NUMPAD5: case 53:
+		PreemptivePriorityStrategy(null);
+		break;
+	case WXK_NUMPAD6: case 54:
+		NonPreemptivePriorityStrategy(null);
+		break;
+	default:
+		return;
 	}
 }
 

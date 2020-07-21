@@ -5,9 +5,9 @@ Perform a quick analisys as execution order, average service time, waiting time,
 
 ## Download and run!
 
-You can [download the last release binary files (Windows and GNU/Linux) here!](https://github.com/cristian1604/cpu-process-scheduler/releases/tag/0.8)
+You can [download the last release binary files (Windows and GNU/Linux) here!](https://github.com/cristian1604/cpu-process-scheduler/releases/tag/0.9)
 
-The last release is `0.8`. The GUI is in spanish. The next `1.0` release will be in english too.
+The last release is `0.9`. The GUI is in spanish. The next `1.0` release will be in english too.
 
 ## Avaiable strategies
 
@@ -39,4 +39,4 @@ Written by Cristian Bottazzi.
 
 The GUI was developed using wxWidgets.
 
-Notes about efficency: This project was developed without any optimization on iterative methods. The source code must be optimized for production purposes, but I've decided leave *as is* for clarity on the study of these algorithms on academic envirorments.
+Notes about efficency: This project was developed with few optimizations on iterative methods. The source code must be optimized for production purposes, but I've decided leave *as is* for clarity on the study of these algorithms on academic envirorments.

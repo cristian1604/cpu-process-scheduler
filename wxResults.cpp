@@ -197,6 +197,31 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 	m_table->SetCellFont(P.size(), 1, f);
 	m_table->SetCellBackgroundColour(P.size(), 1, wxColour(117, 223, 230));
 	
+	calculateAverages();
+}
+
+void wxResults::calculateAverages() {
+	int rows = m_tablaProcesos->GetNumberRows();
+	float avg_st = 0;
+	double avg_si = 0;
+	double aux;
+	
+	for (int i = 0; i < rows; i++) {
+		avg_st += wxAtoi(m_table->GetCellValue(i, 2));
+		(m_table->GetCellValue(i, 3)).ToDouble(&aux);
+		avg_si += aux;
+	}
+	avg_st = avg_st/rows;
+	avg_si = avg_si/rows;
+	
+	m_table->SetCellValue(P.size(), 2, (wxString::Format(wxT("%.2f"),avg_st)));
+	m_table->SetCellValue(P.size(), 3, (wxString::Format(wxT("%.0f"),avg_si*100)) + "%");
+	wxFont f;
+	f.SetWeight(wxFONTWEIGHT_BOLD);
+	m_table->SetCellFont(P.size(), 2, f);
+	m_table->SetCellFont(P.size(), 3, f);
+	m_table->SetCellBackgroundColour(P.size(), 2, wxColour(117, 223, 230));
+	m_table->SetCellBackgroundColour(P.size(), 3, wxColour(117, 223, 230));
 }
 
 wxResults::~wxResults() {

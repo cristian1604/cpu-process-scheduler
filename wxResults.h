@@ -22,8 +22,9 @@ private:
 	bool apropiative_mode;
 	wxColour selection_color;
 	wxColour unselected_color;
-private:
+	
 	void highlightCell(bool side);
+	
 protected:
 	void about( wxKeyEvent& event )  override;
 	void PreemptivePriorityStrategy( wxCommandEvent& event )  override;
@@ -46,6 +47,7 @@ public:
 	void solvePreemptivePriority();
 	void solveNonPreemptivePriority();
 	void displayResults(float avg_wt, float avg_st);
+	void calculateAverages();
 };
 
 #endif

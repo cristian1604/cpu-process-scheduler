@@ -169,6 +169,7 @@ void wxResults::displayResults(float avg_wt, float avg_st) {
 		m_table->SetCellValue(i, 1, (wxString::Format(wxT("%i"),aux.wait_time)));
 		m_table->SetCellValue(i, 2, (wxString::Format(wxT("%i"),aux.service_time)));
 		m_table->SetCellValue(i, 3, (wxString::Format(wxT("%.2f"),is)));
+		m_table->SetRowLabelValue(i, P[i].getProcessName());
 		
 		// Diagrama de Gantt
 		if (mode == FCFS_MODE || mode == SRTF_MODE || mode == ROUND_ROBIN_MODE || mode == SJF_MODE || mode == PREEMPTIVE_PRIORITY_MODE || mode == NON_PREEMPTIVE_PRIORITY_MODE) {
@@ -218,8 +219,8 @@ void wxResults::highlightCell(bool side) {
 		col = m_table->GetGridCursorCol();
 	}
 	// clear background color
-	for (int i = 0; i < m_tablaProcesos->GetNumberCols(); i++) {
-		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+2; j++) {
+	for (int i = 0; i < m_tablaProcesos->GetNumberCols()+1; i++) {
+		for (int j = 0; j < m_tablaProcesos->GetNumberRows()+1; j++) {
 			m_tablaProcesos->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 			m_table->SetCellBackgroundColour(i, j, wxColour(255, 255, 255));
 		}

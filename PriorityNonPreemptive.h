@@ -2,6 +2,7 @@
 #define PRIORITYNONPREEMPTIVE_H
 #include "Process.h"
 #include <vector>
+#include <list>
 using namespace std;
 
 #define NONE -1
@@ -13,9 +14,7 @@ public:
 	PriorityNonPreemptive();
 	void SolveGantt(vector <Process> &P, float &avg_wt, float &avg_st);
 private:
-	int findNextProcessToExecute(vector <Process> &P, vector <Process> &stack, int bt);
-	int getIndex(vector <Process> &P, Process elem);
-	vector <Process> updateStack(vector <Process> stack);
+	Process findNextProcessToExecute(list <Process> &ProcessList, int bt, int total_burst);
 	float calculateWaitingTimes(vector <Process> &P);
 };
 

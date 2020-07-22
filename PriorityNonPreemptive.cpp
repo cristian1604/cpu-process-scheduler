@@ -1,10 +1,18 @@
 #include "PriorityNonPreemptive.h"
+#include <list>
+#include "Process.h"
+#include <iostream>
+using namespace std;
 
 PriorityNonPreemptive::PriorityNonPreemptive() {
 	
 }
 
 void PriorityNonPreemptive::SolveGantt(vector <Process> &P, float &avg_wt, float &avg_st) {
+	// Lista de procesos
+	list <Process> ProcessList;
+	vector <Process> Res;
+	
 	// Para conocer la longitud del diagrama, sumo todos los burst-time
 	int total_burst = 0;
 	for (int i = 0; i < P.size(); i++) {
@@ -12,87 +20,64 @@ void PriorityNonPreemptive::SolveGantt(vector <Process> &P, float &avg_wt, float
 		total_burst += P[i].getCpuTime();
 	}
 	
-	// ordenar vector por timepo de llegada de cada proceso
-	// empleo bubble sort, ya que la cantidad de elementos admite un ordenamiento O(n²)
-	Process aux;
+	// Llenar la ProcessList
 	for (int i = 0; i < P.size(); i++) {
-		for (int j = i; j < P.size(); j++) {
-			if (P[j].getArrivalTime() < P[i].getArrivalTime()) {
-				aux = P[i];
-				P[i] = P[j];
-				P[j] = aux;
+		ProcessList.insert(ProcessList.end(), P[i]);
+	}
+	
+	int bt = 0;
+	Process Prc;
+	
+	while (!ProcessList.empty()) {
+		Prc = findNextProcessToExecute(ProcessList, bt, total_burst);
+		int remaining_bursts = Prc.getCpuTime();
+		while (remaining_bursts > 0) {
+			Prc.Gantt[bt++] = PROCESSING;
+			--remaining_bursts;
+		}
+		
+		Prc.setCpuTime(remaining_bursts);
+		
+		if (Prc.getCpuTime() == 0) {
+			Res.push_back(Prc);
+		}
+	}	
+	
+	// Reestablecer las variables CPUTime
+	for (int i = 0; i < P.size(); i++) {
+		for (int j = 0; j < Res.size(); j++) {
+			if (P[i].getId() == Res[j].getId()) {
+				P[i].Gantt = Res[j].Gantt;
+				break;
 			}
 		}
-		
-		// Establecer los vectores de Gantt de cada proceso en cero
-		P[i].Gantt.resize(total_burst);
-		for (int j = 0; j < total_burst; j++) {
-			P[i].Gantt[j] = NONE;
-		}
 	}
 	
-	avg_st = 0;
-	avg_wt = 0;
-	int remaining_bursts;					// Ráfagas de CPU restantes
-	int bt = 0;
-	vector <Process> stack = P;
-	
-	//return; 
-	while (bt < total_burst) {
-		if (stack.empty()) break;
-		int pos = findNextProcessToExecute(P, stack, bt);
-		int i = getIndex(stack, P[pos]);
-		
-		remaining_bursts = stack[i].getCpuTime();
-		while (remaining_bursts > 0) {
-			P[pos].Gantt[bt++] = PROCESSING;
-			stack[i].setCpuTime(--remaining_bursts);
-		}
-		
-		stack = updateStack(stack);
-	}
 	avg_wt = calculateWaitingTimes(P);
 }
 
 
-// Esta funcion devuelve el indice del vector principal P para el elemento elem dado
-int PriorityNonPreemptive::getIndex(vector <Process> &P, Process elem) {
-	for (int i = 0; i < P.size(); i++) {
-		if (P[i].getId() == elem.getId()) {
-			return i;
+// Función que determina el próximo proceso que deberá ser ejecutado por la CPU
+Process PriorityNonPreemptive::findNextProcessToExecute(list <Process> &ProcessList, int bt, int total_burst) {
+	Process min = *(ProcessList.begin());
+	list <Process>::iterator erase_elem = ProcessList.begin();
+	list <Process>::iterator itL = ProcessList.begin();
+	(min.Gantt).resize(total_burst, NONE);
+	while (itL != ProcessList.end()) {
+		if (min.getPriority() > itL->getPriority()) {
+			min = *itL;
+			(min.Gantt).resize(total_burst, NONE);
+			erase_elem = itL;
+		} else if (min.getPriority() == itL->getPriority() && min.getArrivalTime() > itL->getArrivalTime()) {
+			min = *itL;
+			(min.Gantt).resize(total_burst, NONE);
+			erase_elem = itL;
 		}
-	}
-	return -1;
-}
-
-// Retorna solo los elementos que restan ser procesados (con CpuTime > 0)
-vector <Process> PriorityNonPreemptive::updateStack(vector <Process> stack) {
-	vector <Process> res;
-	for (int i = 0; i < stack.size(); i++) {
-		if (stack[i].getCpuTime() > 0) {
-			res.push_back(stack[i]);
-		}
-	}
-	return res;
-}
-
-// Función que determina el próximo proceso que deberá ser ejecutado por el CPU
-int PriorityNonPreemptive::findNextProcessToExecute(vector <Process> &P, vector <Process> &stack, int bt) {	
-	int pos = getIndex(P, stack[0]);
-	int max_priority = P[pos].getPriority();
-	Process aux;
-	
-	for (int j = 0; j < stack.size(); j++) {
-		if (stack[j].getArrivalTime() > bt) {continue;}
-		if (stack[j].getPriority() < max_priority && stack[j].getPriority() > 0) {
-			max_priority = stack[j].getPriority();
-			aux = stack[0];
-			stack[0] = stack[j];
-			stack[j] = aux;
-			pos = getIndex(P, stack[0]);
-		}
+		++itL;
 	}	
-	return pos;
+	ProcessList.erase(erase_elem);
+	cout<<min.getProcessName()<<endl;
+	return min;
 }
 
 // Calcular tiempos de espera entre turnos de procesamiento

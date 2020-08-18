@@ -271,6 +271,10 @@ void wxResults::highlightCell(bool side) {
 		m_tablaProcesos->SetCellBackgroundColour(row, i, wxColour(186, 255, 188));
 		m_tablaProcesos->Refresh(true);
 	}
+	
+	m_table->SetCellBackgroundColour(P.size(), 1, wxColour(117, 223, 230));
+	m_table->SetCellBackgroundColour(P.size(), 2, wxColour(117, 223, 230));
+	m_table->SetCellBackgroundColour(P.size(), 3, wxColour(117, 223, 230));
 }
 
 void wxResults::RoundRobinStrategy( wxCommandEvent& event )  {

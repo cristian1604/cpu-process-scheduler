@@ -31,6 +31,11 @@ void Process::setServiceTime(int val) {
 	
 }
 
+float Process::getServiceTime() {
+	return service_time;
+	
+}
+
 void Process::setWaitTime(int val) {
 	wait_time = val;
 }

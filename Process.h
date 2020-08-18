@@ -34,6 +34,7 @@ public:
 	Process(stProcess p);
 	stProcess toStruct();
 	void setServiceTime(int val);
+	float getServiceTime();
 	void setWaitTime(int val);
 	int getArrivalTime();
 	int getPriority();

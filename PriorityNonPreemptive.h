@@ -3,6 +3,7 @@
 #include "Process.h"
 #include <vector>
 #include <list>
+
 using namespace std;
 
 #define NONE -1
@@ -14,8 +15,8 @@ public:
 	PriorityNonPreemptive();
 	void SolveGantt(vector <Process> &P, float &avg_wt, float &avg_st);
 private:
-	Process findNextProcessToExecute(list <Process> &ProcessList, int bt, int total_burst);
 	float calculateWaitingTimes(vector <Process> &P);
+	void UpdateReadyProcessList(list <Process> &ProcessList, list <Process> &ReadyProcessList, int bt);
 };
 
 #endif

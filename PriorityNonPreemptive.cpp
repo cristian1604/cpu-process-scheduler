@@ -8,76 +8,76 @@ PriorityNonPreemptive::PriorityNonPreemptive() {
 	
 }
 
-void PriorityNonPreemptive::SolveGantt(vector <Process> &P, float &avg_wt, float &avg_st) {
-	// Lista de procesos
-	list <Process> ProcessList;
-	vector <Process> Res;
-	
-	// Para conocer la longitud del diagrama, sumo todos los burst-time
-	int total_burst = 0;
-	for (int i = 0; i < P.size(); i++) {
-		P[i].setId(i+1);
-		total_burst += P[i].getCpuTime();
+void PriorityNonPreemptive::UpdateReadyProcessList(list <Process> &ProcessList, list <Process> &ReadyProcessList, int bt) {
+	list <Process>::iterator it = ProcessList.begin();
+	// Agregar los procesos que llegan en el bt indicado
+	while (it != ProcessList.end()) {
+		if (it->getArrivalTime() <= bt) {
+			ReadyProcessList.insert(ReadyProcessList.end(), *it);
+			it = ProcessList.erase(it);
+		} else {
+			++it;
+		}
+		
 	}
 	
-	// Llenar la ProcessList
+	// Ordenar procesos por prioridad
+	it = ReadyProcessList.begin();
+	list <Process>::iterator it2;
+	while (it != ReadyProcessList.end()) {
+		it2 = it;
+		while (it2 != ReadyProcessList.end()) {
+			if (it2->getPriority() < it->getPriority()) {
+				Process aux = *it;
+				*it = *it2;
+				*it2 = aux;
+			}
+			++it2;
+		}
+		++it;
+	}
+}
+
+void PriorityNonPreemptive::SolveGantt(vector <Process> &P, float &avg_wt, float &avg_st) {
+	int sizeGantt = 0;
 	for (int i = 0; i < P.size(); i++) {
+		sizeGantt += P[i].getCpuTime();
+	}
+	
+	// Copiar vector de tareas en una lista que irá eliminando los procesos a medida que sean agregados a la lista de procesos activos
+	list <Process> ProcessList;
+	for (int i = 0; i < P.size(); i++) {
+		P[i].setId(i+1);
+		P[i].Gantt.resize(sizeGantt, NONE);
 		ProcessList.insert(ProcessList.end(), P[i]);
 	}
 	
 	int bt = 0;
-	Process Prc;
+	list <Process> ReadyProcessList;
+	list <Process>::iterator it = ProcessList.begin();
 	
-	while (!ProcessList.empty()) {
-		Prc = findNextProcessToExecute(ProcessList, bt, total_burst);
-		int remaining_bursts = Prc.getCpuTime();
-		while (remaining_bursts > 0) {
-			Prc.Gantt[bt++] = PROCESSING;
-			--remaining_bursts;
+	UpdateReadyProcessList(ProcessList, ReadyProcessList, bt);	
+	
+	while (!ReadyProcessList.empty()) {
+		it = ReadyProcessList.begin();
+		
+		while (it->getCpuTime() > 0) {
+			it->Gantt[bt++] = PROCESSING;
+			it->setCpuTime(it->getCpuTime() - 1);
 		}
 		
-		Prc.setCpuTime(remaining_bursts);
-		
-		if (Prc.getCpuTime() == 0) {
-			Res.push_back(Prc);
-		}
-	}	
-	
-	// Reestablecer las variables CPUTime
-	for (int i = 0; i < P.size(); i++) {
-		for (int j = 0; j < Res.size(); j++) {
-			if (P[i].getId() == Res[j].getId()) {
-				P[i].Gantt = Res[j].Gantt;
-				break;
+		for (int i = 0; i < P.size(); i++) {
+			if (P[i].getId() == it->getId()) {
+				P[i].Gantt = it->Gantt;
 			}
 		}
+		ReadyProcessList.erase(it);
+		
+		UpdateReadyProcessList(ProcessList, ReadyProcessList, bt);
+		
 	}
 	
 	avg_wt = calculateWaitingTimes(P);
-}
-
-
-// Función que determina el próximo proceso que deberá ser ejecutado por la CPU
-Process PriorityNonPreemptive::findNextProcessToExecute(list <Process> &ProcessList, int bt, int total_burst) {
-	Process min = *(ProcessList.begin());
-	list <Process>::iterator erase_elem = ProcessList.begin();
-	list <Process>::iterator itL = ProcessList.begin();
-	(min.Gantt).resize(total_burst, NONE);
-	while (itL != ProcessList.end()) {
-		if (min.getPriority() > itL->getPriority()) {
-			min = *itL;
-			(min.Gantt).resize(total_burst, NONE);
-			erase_elem = itL;
-		} else if (min.getPriority() == itL->getPriority() && min.getArrivalTime() > itL->getArrivalTime()) {
-			min = *itL;
-			(min.Gantt).resize(total_burst, NONE);
-			erase_elem = itL;
-		}
-		++itL;
-	}	
-	ProcessList.erase(erase_elem);
-	cout<<min.getProcessName()<<endl;
-	return min;
 }
 
 // Calcular tiempos de espera entre turnos de procesamiento

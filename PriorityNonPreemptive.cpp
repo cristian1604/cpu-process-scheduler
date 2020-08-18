@@ -83,7 +83,7 @@ void PriorityNonPreemptive::SolveGantt(vector <Process> &P, float &avg_wt, float
 // Calcular tiempos de espera entre turnos de procesamiento
 // Calcula tanto los ServiceTime y los WaitTime, como también setea las esperas en el vector de Gantt
 float PriorityNonPreemptive::calculateWaitingTimes(vector <Process> &P) {
-	float res = 0;
+	float st = 0;
 	int wt;
 	for (int i = 0; i < P.size(); i++) {
 		bool started = false;
@@ -97,14 +97,15 @@ float PriorityNonPreemptive::calculateWaitingTimes(vector <Process> &P) {
 			
 			if ((P[i].Gantt[j] == NONE && started && bursts > 0) || (P[i].Gantt[j] == NONE && P[i].getArrivalTime() <= j  && bursts > 0)) {
 				P[i].Gantt[j] = WAITING;			// seteo de espera en el vector de Gantt
-				++res;
+				++st;
 				++wt;
 			}
 		}
 		P[i].setServiceTime(wt+P[i].getCpuTime());
 		P[i].setWaitTime(wt);
 	}
-	return res/P.size();
+
+	return st/P.size();
 }
 
 

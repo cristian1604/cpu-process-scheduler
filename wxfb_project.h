@@ -99,6 +99,8 @@ class wxResult : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void keyEvent( wxKeyEvent& event ) { event.Skip(); }
+		virtual void moveWindow( wxMouseEvent& event ) { event.Skip(); }
+		virtual void moveWindow( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void RoundRobinStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void SRTFStrategy( wxCommandEvent& event ) { event.Skip(); }
 		virtual void FCFSStrategy( wxCommandEvent& event ) { event.Skip(); }
@@ -147,6 +149,24 @@ class About : public wxFrame
 		About( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 446,201 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~About();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class wxCompare
+///////////////////////////////////////////////////////////////////////////////
+class wxCompare : public wxFrame 
+{
+	private:
+	
+	protected:
+		wxGrid* m_comparer;
+	
+	public:
+		
+		wxCompare( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 278,246 ), long style = wxDEFAULT_FRAME_STYLE|wxFRAME_TOOL_WINDOW|wxTAB_TRAVERSAL );
+		
+		~wxCompare();
 	
 };
 

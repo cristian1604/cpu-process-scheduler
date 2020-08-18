@@ -402,6 +402,8 @@ wxResult::wxResult( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	// Connect Events
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::keyEvent ) );
+	this->Connect( wxEVT_MOTION, wxMouseEventHandler( wxResult::moveWindow ) );
+	this->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( wxResult::moveWindow ) );
 	m_button_rr->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -420,6 +422,8 @@ wxResult::~wxResult()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( wxResult::keyEvent ) );
+	this->Disconnect( wxEVT_MOTION, wxMouseEventHandler( wxResult::moveWindow ) );
+	this->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( wxResult::moveWindow ) );
 	m_button_rr->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::RoundRobinStrategy ), NULL, this );
 	m_button_srtf->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::SRTFStrategy ), NULL, this );
 	m_button_fcfs->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( wxResult::FCFSStrategy ), NULL, this );
@@ -488,5 +492,51 @@ About::About( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 }
 
 About::~About()
+{
+}
+
+wxCompare::wxCompare( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxVERTICAL );
+	
+	m_comparer = new wxGrid( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	
+	// Grid
+	m_comparer->CreateGrid( 0, 1 );
+	m_comparer->EnableEditing( false );
+	m_comparer->EnableGridLines( true );
+	m_comparer->EnableDragGridSize( true );
+	m_comparer->SetMargins( 0, 0 );
+	
+	// Columns
+	m_comparer->SetColSize( 0, 95 );
+	m_comparer->EnableDragColMove( false );
+	m_comparer->EnableDragColSize( true );
+	m_comparer->SetColLabelSize( 30 );
+	m_comparer->SetColLabelValue( 0, wxT("Espera") );
+	m_comparer->SetColLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Rows
+	m_comparer->EnableDragRowSize( true );
+	m_comparer->SetRowLabelSize( 170 );
+	m_comparer->SetRowLabelAlignment( wxALIGN_CENTRE, wxALIGN_CENTRE );
+	
+	// Label Appearance
+	
+	// Cell Defaults
+	m_comparer->SetDefaultCellAlignment( wxALIGN_LEFT, wxALIGN_TOP );
+	bSizer4->Add( m_comparer, 1, wxEXPAND|wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer4 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+wxCompare::~wxCompare()
 {
 }

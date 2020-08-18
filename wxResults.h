@@ -4,6 +4,7 @@
 #include "Process.h"
 #include <vector>
 #include "FileManager.h"
+#include "wxCompareResults.h"
 using namespace std;
 
 #define ROUND_ROBIN_MODE 1
@@ -24,9 +25,12 @@ private:
 	wxColour selection_color;
 	wxColour unselected_color;
 	
+	wxCompareResults *res;
+	
 	void highlightCell(bool side);
 	
 protected:
+	void moveWindow( wxMouseEvent& event )  override;
 	void keyEvent( wxKeyEvent& event )  override;
 	void invertOrder( wxCommandEvent& event )  override;
 	void showGrid( wxCommandEvent& event )  override;

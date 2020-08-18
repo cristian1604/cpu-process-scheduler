@@ -6,6 +6,7 @@
 #include "PriorityPreemptive.h"
 #include "PriorityNonPreemptive.h"
 #include "wxAbout.h"
+#include "wxCompareResults.h"
 
 wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent) {
 	rr_quantum = quantum;
@@ -35,6 +36,9 @@ wxResults::wxResults(wxWindow *parent, int modo, int quantum) : wxResult(parent)
 		m_tablaProcesos->SetCellValue(pos, 2, (wxString::Format(wxT("%i"),aux.p_arrival)));
 		m_tablaProcesos->SetCellValue(pos, 3, (wxString::Format(wxT("%i"),aux.p_priority)));
 	}
+	
+	res = new wxCompareResults(this, rr_quantum);
+	res->Show();
 	
 	selection_color = m_button_rr->GetBackgroundColour();
 	unselected_color = m_button_sjf->GetBackgroundColour();
@@ -383,5 +387,13 @@ void wxResults::keyEvent( wxKeyEvent& event )  {
 	default:
 		return;
 	}
+}
+
+void wxResults::moveWindow( wxMouseEvent& event )  {
+	//event.Skip();
+	wxSize size = this->GetSize();
+	int x, y;
+	this->GetPosition(&x, &y);
+	res->Move(x + size.GetWidth() + 10, y + 50);
 }
 

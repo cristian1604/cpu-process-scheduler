@@ -5,9 +5,9 @@ Perform a quick analisys as execution order, average service time, waiting time,
 
 ## Download and run!
 
-You can [download the last release binary files (Windows and GNU/Linux) here!](https://github.com/cristian1604/cpu-process-scheduler/releases/tag/0.9)
+You can [download the last release binary files (Windows and GNU/Linux) here!](https://github.com/cristian1604/cpu-process-scheduler/releases/tag/1.0)
 
-The last release is `0.9`. The GUI is in spanish. The next `1.0` release will be in english too.
+The last release is `1.0`. On next, I will upload it on english.
 
 ## Avaiable strategies
 

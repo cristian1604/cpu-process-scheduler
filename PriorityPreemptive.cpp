@@ -2,12 +2,7 @@
 #include "Process.h"
 #include <vector>
 #include <list>
-#include <iostream>
 using namespace std;
-
-#define NONE -1
-#define WAITING 0
-#define PROCESSING 1
 
 PriorityPreemptive::PriorityPreemptive() {
 	

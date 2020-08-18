@@ -3,7 +3,12 @@
 #include <vector>
 #include "Process.h"
 #include <list>
+
 using namespace std;
+
+#define NONE -1
+#define WAITING 0
+#define PROCESSING 1
 
 class PriorityPreemptive {
 public:

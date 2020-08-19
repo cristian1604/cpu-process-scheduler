@@ -75,7 +75,7 @@ wxCompareResults::wxCompareResults(wxWindow *parent, int quantum) : wxCompare(pa
 		
 		m_comparer->InsertRows(m_comparer->GetNumberRows());
 		m_comparer->SetRowLabelValue(m_comparer->GetNumberRows()-1, title);
-		m_comparer->SetCellValue(wxString::Format(wxT("%f"),avg_wt), m_comparer->GetNumberRows()-1, 0);
+		m_comparer->SetCellValue(m_comparer->GetNumberRows()-1, 0, wxString::Format(wxT("%f"),avg_wt));
 	}
 	
 	for (int i = 0; i < m_comparer->GetNumberRows(); i++) {

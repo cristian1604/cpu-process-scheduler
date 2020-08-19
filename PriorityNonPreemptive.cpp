@@ -21,9 +21,24 @@ void PriorityNonPreemptive::UpdateReadyProcessList(list <Process> &ProcessList, 
 		
 	}
 	
-	// Ordenar procesos por prioridad
+	// Order by process creation
 	it = ReadyProcessList.begin();
 	list <Process>::iterator it2;
+	while (it != ReadyProcessList.end()) {
+		it2 = it;
+		while (it2 != ReadyProcessList.end()) {
+			if (it2->getId() < it->getId()) {
+				Process aux = *it;
+				*it = *it2;
+				*it2 = aux;
+			}
+			++it2;
+		}
+		++it;
+	}
+	
+	// Ordenar procesos por prioridad
+	it = ReadyProcessList.begin();
 	while (it != ReadyProcessList.end()) {
 		it2 = it;
 		while (it2 != ReadyProcessList.end()) {

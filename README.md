@@ -35,7 +35,7 @@ The avaiable modes on this program are classified by preemptive and non preempti
 ## About
 Written by Cristian Bottazzi.
 
-*This project was created as final project of Sistemas Operativos (operating systems) assignment, Computer Engineering at Facultad de Ingeniería y Ciencias Hídricas.*
+*This project was created as Operating Systems final project assignment. Computer Engineering at Facultad de Ingeniería y Ciencias Hídricas.*
 
 The GUI was developed using wxWidgets.
 
